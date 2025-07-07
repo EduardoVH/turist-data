@@ -33,82 +33,115 @@ class _LoginFormState extends State<LoginForm> {
   void _onLoginPressed() {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
-
     context.read<AuthBloc>().add(LoginRequested(email: email, password: password));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFFE8F5E9), Color(0xFF00E5FF)],
-          begin: Alignment.bottomLeft,
-          end: Alignment.topRight,
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFFE8F5E9), Color(0xFFE8F5E9)],
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight,
+            ),
+          ),
         ),
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Align(
-                alignment: Alignment.topRight,
-                child: Icon(Icons.close, size: 28),
-              ),
-              const SizedBox(height: 40),
-              const CircleAvatar(
-                radius: 36,
-                backgroundColor: Colors.grey,
-                child: Icon(Icons.person, size: 36, color: Colors.white),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Bienvenido de nuevo',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 32),
-              _InputField(controller: _emailController, label: 'Correo electrónico'),
-              const SizedBox(height: 16),
-              _InputField(controller: _passwordController, label: 'Contraseña', obscure: true),
-              const SizedBox(height: 8),
-              const Text(
-                '¿Olvidaste tu contraseña?',
-                style: TextStyle(fontSize: 14),
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _onLoginPressed,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF00CDBE),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Image.asset(
+            'assets/images/top_wave.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Image.asset(
+            'assets/images/bottom_wave.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+
+        SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Align(
+                  alignment: Alignment.topRight,
+                  child: Icon(Icons.close, size: 28),
                 ),
-                child: const Text('Iniciar sesión', style: TextStyle(fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(height: 16),
-              Center(
-                child: GestureDetector(
-                  onTap: () => context.go('/register'),
-                  child: const Text.rich(
-                    TextSpan(
-                      text: '¿Eres usuario nuevo? ',
-                      children: [
-                        TextSpan(
-                          text: 'Registrarse',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                const SizedBox(height: 40),
+                const CircleAvatar(
+                  radius: 36,
+                  backgroundColor: Colors.grey,
+                  child: Icon(Icons.person, size: 36, color: Colors.white),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Bienvenido de nuevo',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 32),
+                _InputField(
+                  controller: _emailController,
+                  label: 'Correo electrónico',
+                ),
+                const SizedBox(height: 16),
+                _InputField(
+                  controller: _passwordController,
+                  label: 'Contraseña',
+                  obscure: true,
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  '¿Olvidaste tu contraseña?',
+                  style: TextStyle(fontSize: 14),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: _onLoginPressed,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF00CDBE),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  child: const Text(
+                    'Iniciar sesión',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Center(
+                  child: GestureDetector(
+                    onTap: () => context.go('/register'),
+                    child: const Text.rich(
+                      TextSpan(
+                        text: '¿Eres usuario nuevo? ',
+                        children: [
+                          TextSpan(
+                            text: 'Registrarse',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }
