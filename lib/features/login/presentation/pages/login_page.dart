@@ -12,7 +12,6 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       body: BlocListener<AuthBloc, dynamic>(
         listener: (context, state) {
-          // Puedes manejar estados AuthSuccess o AuthFailure aquí
         },
         child: const LoginForm(),
       ),

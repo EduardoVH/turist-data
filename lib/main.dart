@@ -10,7 +10,7 @@ import 'features/login/presentation/pages/register_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await init(); // Inicializa GetIt
+  await init();
   runApp(const MyApp());
 }
 
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
-          create: (context) => sl<AuthBloc>(), // ✔ Usa GetIt
+          create: (context) => sl<AuthBloc>(),
         ),
       ],
       child: MaterialApp.router(
@@ -49,7 +49,7 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       path: '/admin',
-      builder: (context, state) => const AdminPage(), // ✔ Clase bien definida
+      builder: (context, state) => const AdminPage(),
     ),
   ],
 );
