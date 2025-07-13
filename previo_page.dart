@@ -100,7 +100,7 @@ class _PrevioPageState extends State<PrevioPage> {
                   ],
                 ),
               );
-            }).toList(),
+            }),
             const SizedBox(height: 12),
             const Text(
               'Eventos Próximos',

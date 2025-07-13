@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:latlong2/latlong.dart'; // Para LatLng
+import 'map_page.dart'; // Importa tu MapPage corregido
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
@@ -13,40 +15,52 @@ class _ExplorePageState extends State<ExplorePage> {
     'Todos', 'Oaxaca', 'Yucatán', 'Quintana Roo', 'Chiapas'
   ];
 
-  final List<Map<String, String>> destinations = const [
+  final List<Map<String, dynamic>> destinations = const [
     {
       'title': 'Oaxaca',
       'subtitle': 'Oaxaca',
-      'image': 'https://images.unsplash.com/photo-1570129477492-45c003edd2be'
+      'image': 'https://images.unsplash.com/photo-1570129477492-45c003edd2be',
+      'lat': 17.0732,
+      'lng': -96.7266,
     },
     {
       'title': 'Yucatán',
       'subtitle': 'Yucatán',
-      'image': 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90'
+      'image': 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90',
+      'lat': 20.7099,
+      'lng': -89.0943,
     },
     {
       'title': 'Quintana Roo',
       'subtitle': 'Quintana Roo',
-      'image': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e'
+      'image': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
+      'lat': 19.1817,
+      'lng': -88.4791,
     },
     {
       'title': 'Chiapas',
       'subtitle': 'Chiapas',
-      'image': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e'
+      'image': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
+      'lat': 16.7569,
+      'lng': -93.1292,
     },
     {
       'title': 'Ciudad de México',
       'subtitle': 'Ciudad de México',
-      'image': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e'
+      'image': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
+      'lat': 19.4326,
+      'lng': -99.1332,
     },
     {
       'title': 'Puebla',
       'subtitle': 'Puebla',
-      'image': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e'
+      'image': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
+      'lat': 19.0414,
+      'lng': -98.2063,
     },
   ];
 
-  int _selectedIndex = 1; // "Explorar" está activa al cargar
+  int _selectedIndex = 1;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -74,10 +88,7 @@ class _ExplorePageState extends State<ExplorePage> {
         title: const Text('Destinos', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
         ],
       ),
       body: Padding(
@@ -98,7 +109,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 children: [
                   ...List.generate(
                     destinations.length ~/ 2,
-                        (i) {
+                    (i) {
                       final first = destinations[i * 2];
                       final second = (i * 2 + 1 < destinations.length)
                           ? destinations[i * 2 + 1]
@@ -120,10 +131,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     },
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    "Historial reciente",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                  const Text("Historial reciente", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   SizedBox(
                     height: 170,
@@ -165,35 +173,53 @@ class _ExplorePageState extends State<ExplorePage> {
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Perfil'),
         ],
       ),
-
     );
   }
 }
 
 class DestinationCard extends StatelessWidget {
-  final Map<String, String> data;
+  final Map<String, dynamic> data;
   const DestinationCard({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AspectRatio(
-          aspectRatio: 1,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              data['image']!,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.broken_image)),
+    return GestureDetector(
+      onTap: () {
+        final lat = data['lat'];
+        final lng = data['lng'];
+        final title = data['title'];
+
+        if (lat != null && lng != null && title != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MapPage(
+                title: title as String,
+                location: LatLng(lat as double, lng as double),
+              ),
+            ),
+          );
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AspectRatio(
+            aspectRatio: 1,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                data['image'] as String,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.broken_image)),
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 8),
-        Text(data['title']!, style: const TextStyle(fontWeight: FontWeight.bold)),
-        Text(data['subtitle']!, style: const TextStyle(color: Colors.grey)),
-      ],
+          const SizedBox(height: 8),
+          Text(data['title'] as String, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(data['subtitle'] as String, style: const TextStyle(color: Colors.grey)),
+        ],
+      ),
     );
   }
 }

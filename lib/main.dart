@@ -1,18 +1,19 @@
-import 'package:untitled/features/login/presentation/pages/admin_page.dart';
-import 'package:untitled/injection.dart';
+import 'package:aplicacion2/features/login/presentation/pages/HistorialPage.dart';
+import 'package:aplicacion2/features/login/presentation/pages/PrivacyPolicyPage.dart';
+import 'package:aplicacion2/features/login/presentation/pages/admin_page.dart';
+import 'package:aplicacion2/features/login/presentation/pages/eventos_page.dart';
+import 'package:aplicacion2/features/login/presentation/pages/explore_page.dart';
+import 'package:aplicacion2/features/login/presentation/pages/home_page.dart';
+import 'package:aplicacion2/features/login/presentation/pages/previo_page.dart';
+import 'package:aplicacion2/features/login/presentation/pages/profile_page.dart';
+import 'package:aplicacion2/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:untitled/features/login/presentation/pages/home_page.dart';
 import 'features/login/presentation/blocs/auth_bloc.dart';
 import 'features/login/presentation/pages/login_page.dart';
 import 'features/login/presentation/pages/register_page.dart';
-import 'package:untitled/features/login/presentation/pages/eventos_page.dart';
-import 'package:untitled/features/login/presentation/pages/explore_page.dart';
-import 'package:untitled/features/login/presentation/pages/previo_page.dart';
-import 'package:untitled/features/login/presentation/pages/PrivacyPolicyPage.dart';
-import 'package:untitled/features/login/presentation/pages/profile_page.dart';
-import 'package:untitled/features/login/presentation/pages/HistorialPage.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await init();
