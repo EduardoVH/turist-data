@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
@@ -11,69 +12,120 @@ class RegisterPage extends StatelessWidget {
   }
 }
 
-class RegisterForm extends StatelessWidget {
+class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
 
   @override
+  State<RegisterForm> createState() => _RegisterFormState();
+}
+
+class _RegisterFormState extends State<RegisterForm> {
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  void _onRegisterPressed() {
+    context.go('/');
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFFE8F5E9), Color(0xFF00E5FF)],
-          begin: Alignment.bottomLeft,
-          end: Alignment.topRight,
-        ),
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Align(
-                alignment: Alignment.topRight,
-                child: Icon(Icons.close, size: 28),
-              ),
-              const SizedBox(height: 40),
-              const Text(
-                'Crear Cuenta',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 32),
-              const _InputField(label: 'Nombre'),
-              const SizedBox(height: 16),
-              const _InputField(label: 'Correo electrónico'),
-              const SizedBox(height: 16),
-              const _InputField(label: 'Contraseña', obscure: true),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF00CDBE),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-                child: const Text('Sign up', style: TextStyle(fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(height: 16),
-              const Center(
-                child: Text.rich(
-                  TextSpan(
-                    text: 'Already have an account? ',
-                    children: [
-                      TextSpan(
-                        text: 'Sign in',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+    return Stack(
+      children: [
+        // Fondo degradado
+        Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFFE8F5E9), Color(0xFFE8F5E9)],
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight,
+            ),
           ),
         ),
-      ),
+
+        // Ondas decorativas por URL
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Image.network(
+            'https://i.imgur.com/VqkZhz5.png',
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => const SizedBox(),
+          ),
+        ),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Image.network(
+            'https://i.imgur.com/hFeYeGN.png',
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => const SizedBox(),
+          ),
+        ),
+
+        // Formulario
+        SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Align(
+                  alignment: Alignment.topRight,
+                  child: Icon(Icons.close, size: 28),
+                ),
+                const SizedBox(height: 40),
+                const CircleAvatar(
+                  radius: 36,
+                  backgroundColor: Colors.grey,
+                  child: Icon(Icons.person_add, size: 36, color: Colors.white),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Crear Cuenta',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 32),
+                _InputField(controller: _nameController, label: 'Nombre'),
+                const SizedBox(height: 16),
+                _InputField(controller: _emailController, label: 'Correo electrónico'),
+                const SizedBox(height: 16),
+                _InputField(controller: _passwordController, label: 'Contraseña', obscure: true),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: _onRegisterPressed,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF00CDBE),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  child: const Text('Registrarse', style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+                const SizedBox(height: 16),
+                Center(
+                  child: GestureDetector(
+                    onTap: () => context.go('/'),
+                    child: const Text.rich(
+                      TextSpan(
+                        text: '¿Ya tienes cuenta? ',
+                        children: [
+                          TextSpan(
+                            text: 'Iniciar sesión',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -81,12 +133,18 @@ class RegisterForm extends StatelessWidget {
 class _InputField extends StatelessWidget {
   final String label;
   final bool obscure;
+  final TextEditingController controller;
 
-  const _InputField({required this.label, this.obscure = false});
+  const _InputField({
+    required this.controller,
+    required this.label,
+    this.obscure = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       obscureText: obscure,
       decoration: InputDecoration(
         hintText: label,

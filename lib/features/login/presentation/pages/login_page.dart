@@ -12,6 +12,7 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       body: BlocListener<AuthBloc, dynamic>(
         listener: (context, state) {
+          // Aquí podrías escuchar el estado del AuthBloc si decides integrarlo más adelante
         },
         child: const LoginForm(),
       ),
@@ -33,7 +34,9 @@ class _LoginFormState extends State<LoginForm> {
   void _onLoginPressed() {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
+
     context.read<AuthBloc>().add(LoginRequested(email: email, password: password));
+    context.go('/privacy'); // Redirección directa
   }
 
   @override
@@ -49,26 +52,28 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
         ),
-
+        // Imagen superior (URL)
         Positioned(
           top: 0,
           left: 0,
           right: 0,
-          child: Image.asset(
-            'assets/images/top_wave.png',
+          child: Image.network(
+            'https://i.imgur.com/VqkZhz5.png',
             fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => const SizedBox(),
           ),
         ),
+        // Imagen inferior (URL)
         Positioned(
           bottom: 0,
           left: 0,
           right: 0,
-          child: Image.asset(
-            'assets/images/bottom_wave.png',
+          child: Image.network(
+            'https://i.imgur.com/hFeYeGN.png',
             fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => const SizedBox(),
           ),
         ),
-
         SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
