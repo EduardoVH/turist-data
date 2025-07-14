@@ -1,25 +1,21 @@
-import 'package:aplicacion2/features/login/data/datasources/auth_remote_datasource.dart';
-import 'package:aplicacion2/features/login/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/failure.dart';
-// import '../../models/user_model.dart';
+import 'package:untitled/core/error/failure.dart';
+import 'package:untitled/features/login/data/datasources/auth_remote_datasource.dart';
+import 'package:untitled/features/login/data/models/user_model.dart';
+import 'package:untitled/features/login/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
 
-  AuthRepositoryImpl(this.remoteDataSource);
+  const AuthRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, void>> login(String email, String password) async {
+  Future<Either<Failure, UserModel>> login(String email, String password) async {
     try {
-      final result = await remoteDataSource.login(email, password);
-      if (result == 'valido') {
-        return Right(null);
-      } else {
-        return Left(Failure('Credenciales inválidas'));
-      }
-    } catch (e) {
-      return Left(Failure('Error de red'));
+      final user = await remoteDataSource.login(email, password);
+      return Right(user);
+    } on Exception catch (e) {
+      return Left(Failure('Login fallido: ${e.toString()}'));
     }
   }
 }
