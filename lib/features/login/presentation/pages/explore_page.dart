@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:latlong2/latlong.dart'; // Para LatLng
-import 'map_page.dart'; // Importa tu MapPage corregido
+import 'package:latlong2/latlong.dart';
+import 'map_page.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
