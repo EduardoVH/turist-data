@@ -1,14 +1,14 @@
 import 'package:go_router/go_router.dart';
-import '../../presentation/pages/login_page.dart';
-import '../../presentation/pages/register_page.dart';
-import '../../presentation/pages/admin_page.dart';
-import '../../presentation/pages/events_page.dart';
-import '../../presentation/pages/explore_page.dart';
-import '../../presentation/pages/home_page.dart';
-import '../../presentation/pages/history_page.dart';
-import '../../presentation/pages/privacy_policy_page.dart';
-import '../../presentation/pages/preview_page.dart';
-import '../../presentation/pages/profile_page.dart';
+import '../../features/login/presentation/pages/login_page.dart';
+import '../../features/login/presentation/pages/register_page.dart';
+import '../../features/admin/presentation/pages/admin_page.dart';
+import '../../features/events/presentation/pages/events_page.dart';
+import '../../features/explore/presentation/pages/explore_page.dart';
+import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/history/presentation/pages/history_page.dart';
+import '../../features/privacy_policy/presentation/pages/privacy_policy_page.dart';
+import '../../features/preview/presentation/pages/preview_page.dart';
+import '../../features/profile/presentation/pages/profile_page.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(

@@ -1,11 +1,11 @@
-import 'package:aplicacion2/data/datasources/auth_remote_datasource.dart';
-import 'package:aplicacion2/data/repositories/auth_remote_datasource_impl.dart';
+import '../../features/login/data/datasources/auth_remote_datasource.dart';
+import '../../features/login/data/repositories/auth_remote_datasource_impl.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import '../../data/repositories/auth_repository_impl.dart';
-import '../../domain/repositories/auth_repository.dart';
-import '../../domain/usecases/login_usecase.dart';
-import '../../presentation/blocs/auth_bloc.dart';
+import '../../features/login/data/repositories/auth_repository_impl.dart';
+import '../../features/login/domain/repositories/auth_repository.dart';
+import '../../features/login/domain/usecases/login_usecase.dart';
+import '../../features/login/presentation/bloc/auth_bloc.dart';
 
 final sl = GetIt.instance;
 
