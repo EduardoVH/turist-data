@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:turist_data/core/router/app_router.dart';
 import '../blocs/register_bloc.dart';
 import '../blocs/register_event.dart';
 import '../blocs/register_state.dart';
@@ -139,7 +140,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       const SizedBox(height: 16),
                       Center(
                         child: GestureDetector(
-                          onTap: () => context.pop(),
+                           onTap: () => context.go(RouterConstants.login),
                           child: const Text.rich(
                             TextSpan(
                               text: '¿Ya tienes cuenta? ',
@@ -148,11 +149,11 @@ class _RegisterFormState extends State<RegisterForm> {
                                   text: 'Iniciar sesión',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                              ],
+                                ],
                             ),
                           ),
                         ),
-                      ),
+                        ),
                     ],
                   ),
                 ),
