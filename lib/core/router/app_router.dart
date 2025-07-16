@@ -1,6 +1,9 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:turist_data/core/di/injection.dart';
+import 'package:turist_data/features/register/presentation/blocs/register_bloc.dart';
+import 'package:turist_data/features/register/presentation/pages/register_page.dart';
 import '../../features/login/presentation/pages/login_page.dart';
-import '../../features/login/presentation/pages/register_page.dart';
 import '../../features/admin/presentation/pages/admin_page.dart';
 import '../../features/events/presentation/pages/events_page.dart';
 import '../../features/explore/presentation/pages/explore_page.dart';
@@ -20,7 +23,10 @@ class AppRouter {
       ),
       GoRoute(
         path: RouterConstants.register,
-        builder: (context, state) => const RegisterPage(),
+        builder:(context, state) => BlocProvider(
+          create: (context) => sl<RegisterBloc>(),
+          child: const RegisterPage(),
+        ),
       ),
       GoRoute(
         path: RouterConstants.admin,
