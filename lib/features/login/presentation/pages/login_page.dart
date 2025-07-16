@@ -99,10 +99,16 @@ class _LoginFormState extends State<LoginForm> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Align(
-                      alignment: Alignment.topRight,
-                      child: Icon(Icons.close, size: 28),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        icon: const Icon(Icons.close, size: 28),
+                        tooltip: 'Cerrar',
+                        onPressed: () => context.go('/previo'), // Reemplaza con tu ruta deseada
+                      ),
                     ),
+
+
                     const SizedBox(height: 40),
                     const CircleAvatar(
                       radius: 36,
@@ -141,15 +147,15 @@ class _LoginFormState extends State<LoginForm> {
                       ),
                       child: _isLoading
                           ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                  strokeWidth: 2, color: Colors.white),
-                            )
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2, color: Colors.white),
+                      )
                           : const Text(
-                              'Iniciar sesión',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
+                        'Iniciar sesión',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                     const SizedBox(height: 16),
                     Center(

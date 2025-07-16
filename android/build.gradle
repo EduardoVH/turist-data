@@ -1,3 +1,16 @@
+// android/build.gradle (raíz)
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Plugin de Android Gradle versión 8.3.0
+        classpath 'com.android.tools.build:gradle:8.3.0'
+    }
+}
+
 allprojects {
     repositories {
         google()
@@ -5,14 +18,18 @@ allprojects {
     }
 }
 
+// Configuración para que los builds queden fuera de la carpeta android/
 rootProject.buildDir = "../build"
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
 }
 
+// Tarea para limpiar el build
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }

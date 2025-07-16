@@ -85,10 +85,11 @@ class _RegisterFormState extends State<RegisterForm> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Align(
-                        alignment: Alignment.topRight,
+                        alignment: Alignment.topLeft,
                         child: IconButton(
                           icon: const Icon(Icons.close, size: 28),
-                          onPressed: () => context.pop(),
+                          tooltip: 'Cerrar',
+                          onPressed: () => context.go('/'), // Reemplaza con tu ruta deseada
                         ),
                       ),
                       const SizedBox(height: 40),

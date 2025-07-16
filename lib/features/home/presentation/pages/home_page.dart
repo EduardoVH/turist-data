@@ -108,24 +108,30 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
-              const QuickAccessCard(
+
+              // QuickAccessCards con navegación a detalle
+              QuickAccessCard(
                 title: 'Destinos Populares',
                 subtitle: 'Descubre lugares fantásticos',
+                description: 'Explora los destinos turísticos más populares de México, con recomendaciones personalizadas y vistas impresionantes.',
                 imageUrl: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90',
               ),
-              const QuickAccessCard(
+              QuickAccessCard(
                 title: 'Eventos especiales',
                 subtitle: 'Exclusive dining experiences.',
+                description: 'No te pierdas eventos únicos como ferias gastronómicas, festivales culturales y celebraciones locales imperdibles.',
                 imageUrl: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092',
               ),
-              const QuickAccessCard(
+              QuickAccessCard(
                 title: 'Sugerencias del sistema',
                 subtitle: 'Opciones gastronómicas personalizadas.',
+                description: 'Nuestro sistema inteligente te sugiere lugares y eventos según tus gustos, ubicación y experiencias previas.',
                 imageUrl: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092',
               ),
-              const QuickAccessCard(
+              QuickAccessCard(
                 title: 'Chat',
                 subtitle: 'Obtenga asistencia en cualquier momento.',
+                description: 'Conéctate con nuestro equipo de soporte o con otros viajeros para resolver dudas, compartir experiencias o recibir ayuda.',
                 imageUrl: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092',
               ),
             ],
@@ -139,12 +145,14 @@ class _HomePageState extends State<HomePage> {
 class QuickAccessCard extends StatelessWidget {
   final String title;
   final String subtitle;
+  final String description;
   final String imageUrl;
 
   const QuickAccessCard({
     super.key,
     required this.title,
     required this.subtitle,
+    required this.description,
     required this.imageUrl,
   });
 
@@ -153,7 +161,7 @@ class QuickAccessCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: Color.fromRGBO(255, 255, 255, 0.85),
+        color: const Color.fromRGBO(255, 255, 255, 0.85),
         borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(
@@ -168,7 +176,84 @@ class QuickAccessCard extends StatelessWidget {
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text(subtitle),
-        onTap: () {},
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => QuickAccessDetailPage(
+                title: title,
+                subtitle: subtitle,
+                description: description,
+                imageUrl: imageUrl,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class QuickAccessDetailPage extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final String description;
+  final String imageUrl;
+
+  const QuickAccessDetailPage({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.description,
+    required this.imageUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF0F9F3),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black87),
+        title: Text(title),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Hero(
+            tag: title,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(0),
+              child: Image.network(
+                imageUrl,
+                height: 250,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.teal,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  description,
+                  style: const TextStyle(fontSize: 15, height: 1.5),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -6,17 +6,41 @@ class PrivacyPolicyPage extends StatelessWidget {
 
   final String userName = 'Alfredo Garcia';
   final String userEmail = 'AlfredoGarcia@example.com';
-  final String policyText =
-      'En TuristData, nos comprometemos a proteger tu privacidad y mantener segura la información que nos confías. Esta Política de Privacidad describe qué datos recopilamos, cómo los usamos y tus derechos sobre ellos.\n\nAl utilizar nuestra aplicación, aceptas esta política. Si no estás de acuerdo con alguno de sus términos, por favor no uses la App.';
+
+  final String policyText = '''
+De conformidad con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, informamos:
+
+¿QUIÉNES SOMOS?
+Empresa dedicada a servicios de información turística 📍 Avenida Primera Poniente Sur, núm. 228, col. Santa Anita, Centro, C.P. 29150, Suchiapa, Chiapas
+
+¿QUÉ DATOS OBTENEMOS?
+• Nombre de usuario
+• Correo electrónico
+• Contraseña (cifrada)
+• Ubicación geográfica
+
+❌ NO solicitamos: Datos bancarios, números de tarjeta, teléfonos o fotografías
+
+¿PARA QUÉ USAMOS SUS DATOS?
+• Uso principal: Crear su cuenta y brindar servicios turísticos
+• Uso secundario: Mejorar la app y enviar recomendaciones personalizadas
+
+SUS DERECHOS (ARCO)
+Puede Acceder, Rectificar, Cancelar u Oponerse al uso de sus datos.
+
+¿CÓMO EJERCER SUS DERECHOS?
+📧 Contacto: turistdata@ejemplo.com
+⏰ Respuesta: Máximo 20 días hábiles
+
+SEGURIDAD
+🔐 Sus datos están protegidos con medidas de seguridad técnicas y administrativas.
+''';
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Fondo blanco
         Container(color: const Color(0xFFF0F9F3)),
-
-
         Positioned(
           top: 0,
           left: 0,
@@ -37,20 +61,19 @@ class PrivacyPolicyPage extends StatelessWidget {
             errorBuilder: (_, __, ___) => const SizedBox(),
           ),
         ),
-
-
         SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(height: 24),
                 const Text(
                   'Políticas De Privacidad',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
+                    letterSpacing: 0.5,
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -65,25 +88,57 @@ class PrivacyPolicyPage extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black, // ✅ negro
+                    color: Colors.black,
+                    letterSpacing: 0.5,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   userEmail,
-                  style: const TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  policyText,
                   style: const TextStyle(
                     fontSize: 14,
-                    color: Colors.black87,
-                    backgroundColor: Colors.transparent,
+                    color: Colors.grey,
+                    letterSpacing: 0.5,
                   ),
-                  textAlign: TextAlign.justify,
                 ),
-                const SizedBox(height: 36),
+                const SizedBox(height: 24),
+
+                // 🔹 TÍTULO CENTRADO DE "TURISTDATA"
+                const Text(
+                  'TURISTDATA',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    letterSpacing: 1,
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // 🔹 TEXTO CON SCROLL
+                Expanded(
+                  child: Scrollbar(
+                    thumbVisibility: true,
+                    child: SingleChildScrollView(
+                      child: Text(
+                        policyText,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.black87,
+                          backgroundColor: Colors.transparent,
+                          letterSpacing: 0.5,
+                        ),
+                        textAlign: TextAlign.justify,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // 🔹 BOTONES
                 Row(
                   children: [
                     Expanded(
@@ -111,6 +166,8 @@ class PrivacyPolicyPage extends StatelessWidget {
                     ),
                   ],
                 ),
+
+                const SizedBox(height: 16),
               ],
             ),
           ),

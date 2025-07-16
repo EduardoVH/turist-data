@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'destination_detail_page.dart';
 
 class PreviewPage extends StatefulWidget {
   const PreviewPage({super.key});
@@ -55,50 +56,60 @@ class _PreviewPageState extends State<PreviewPage> {
             ),
             const SizedBox(height: 10),
             ...popularDestinations.map((data) {
-              return Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            data['category'] ?? '',
-                            style: const TextStyle(
-                                fontSize: 13, color: Colors.grey),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            data['place'] ?? '',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+              return GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => DestinationDetailPage(data: data),
+                  ));
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              data['category'] ?? '',
+                              style: const TextStyle(
+                                  fontSize: 13, color: Colors.grey),
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            data['subtitle'] ?? '',
-                            style: const TextStyle(
-                                fontSize: 13, color: Colors.black87),
-                          ),
-                        ],
+                            const SizedBox(height: 4),
+                            Text(
+                              data['place'] ?? '',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              data['subtitle'] ?? '',
+                              style: const TextStyle(
+                                  fontSize: 13, color: Colors.black87),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
-                        data['image'] ?? '',
-                        width: 90,
-                        height: 70,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) =>
+                      const SizedBox(width: 12),
+                      Hero(
+                        tag: data['place']!,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.network(
+                            data['image'] ?? '',
+                            width: 90,
+                            height: 70,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) =>
                             const Icon(Icons.broken_image),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             }),
@@ -110,7 +121,7 @@ class _PreviewPageState extends State<PreviewPage> {
             const SizedBox(height: 12),
             Container(
               decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(12)),
+              BoxDecoration(borderRadius: BorderRadius.circular(12)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -122,7 +133,7 @@ class _PreviewPageState extends State<PreviewPage> {
                       height: 180,
                       fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) =>
-                          const Icon(Icons.broken_image),
+                      const Icon(Icons.broken_image),
                     ),
                   ),
                   const SizedBox(height: 8),
