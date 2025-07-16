@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:aplicacion2/core/di/injection.dart';
-import 'package:aplicacion2/core/router/app_router.dart';
-import 'package:aplicacion2/features/login/presentation/bloc/auth_bloc.dart';
+import 'package:turist_data/core/di/injection.dart';
+import 'package:turist_data/core/router/app_router.dart';
+import 'package:turist_data/features/login/presentation/bloc/auth_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

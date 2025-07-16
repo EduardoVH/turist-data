@@ -1,4 +1,4 @@
-import 'package:aplicacion2/core/router/app_router.dart';
+import 'package:turist_data/core/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
@@ -13,7 +13,11 @@ class ExplorePage extends StatefulWidget {
 
 class _ExplorePageState extends State<ExplorePage> {
   final List<String> filters = const [
-    'Todos', 'Oaxaca', 'Yucatán', 'Quintana Roo', 'Chiapas'
+    'Todos',
+    'Oaxaca',
+    'Yucatán',
+    'Quintana Roo',
+    'Chiapas',
   ];
 
   final List<Map<String, dynamic>> destinations = const [
@@ -86,11 +90,12 @@ class _ExplorePageState extends State<ExplorePage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text('Destinos', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Destinos',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
-        actions: [
-          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
-        ],
+        actions: [IconButton(icon: const Icon(Icons.search), onPressed: () {})],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -106,33 +111,36 @@ class _ExplorePageState extends State<ExplorePage> {
             const SizedBox(height: 16),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
                 children: [
-                  ...List.generate(
-                    destinations.length ~/ 2,
-                    (i) {
-                      final first = destinations[i * 2];
-                      final second = (i * 2 + 1 < destinations.length)
-                          ? destinations[i * 2 + 1]
-                          : null;
+                  ...List.generate(destinations.length ~/ 2, (i) {
+                    final first = destinations[i * 2];
+                    final second = (i * 2 + 1 < destinations.length)
+                        ? destinations[i * 2 + 1]
+                        : null;
 
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: Row(
-                          children: [
-                            Expanded(child: DestinationCard(data: first)),
-                            const SizedBox(width: 16),
-                            if (second != null)
-                              Expanded(child: DestinationCard(data: second))
-                            else
-                              const Expanded(child: SizedBox()),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: Row(
+                        children: [
+                          Expanded(child: DestinationCard(data: first)),
+                          const SizedBox(width: 16),
+                          if (second != null)
+                            Expanded(child: DestinationCard(data: second))
+                          else
+                            const Expanded(child: SizedBox()),
+                        ],
+                      ),
+                    );
+                  }),
                   const SizedBox(height: 8),
-                  const Text("Historial reciente", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const Text(
+                    "Historial reciente",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 8),
                   SizedBox(
                     height: 170,
@@ -141,7 +149,8 @@ class _ExplorePageState extends State<ExplorePage> {
                       itemCount: 4,
                       separatorBuilder: (_, __) => const SizedBox(width: 12),
                       itemBuilder: (context, i) {
-                        final history = destinations[(destinations.length - 1) - i];
+                        final history =
+                            destinations[(destinations.length - 1) - i];
                         return SizedBox(
                           width: 140,
                           child: ClipRect(
@@ -156,7 +165,7 @@ class _ExplorePageState extends State<ExplorePage> {
                   const SizedBox(height: 16),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -170,8 +179,14 @@ class _ExplorePageState extends State<ExplorePage> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explorar'),
           BottomNavigationBarItem(icon: Icon(Icons.event), label: 'Eventos'),
-          BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), label: 'Chat'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Perfil'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat_bubble_outline),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: 'Perfil',
+          ),
         ],
       ),
     );
@@ -212,13 +227,20 @@ class DestinationCard extends StatelessWidget {
               child: Image.network(
                 data['image'] as String,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.broken_image)),
+                errorBuilder: (_, __, ___) =>
+                    const Center(child: Icon(Icons.broken_image)),
               ),
             ),
           ),
           const SizedBox(height: 8),
-          Text(data['title'] as String, style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text(data['subtitle'] as String, style: const TextStyle(color: Colors.grey)),
+          Text(
+            data['title'] as String,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Text(
+            data['subtitle'] as String,
+            style: const TextStyle(color: Colors.grey),
+          ),
         ],
       ),
     );

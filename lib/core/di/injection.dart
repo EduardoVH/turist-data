@@ -1,5 +1,4 @@
 import '../../features/login/data/datasources/auth_remote_datasource.dart';
-import '../../features/login/data/repositories/auth_remote_datasource_impl.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import '../../features/login/data/repositories/auth_repository_impl.dart';

@@ -1,17 +1,32 @@
 import 'package:dio/dio.dart';
 
-class AuthRemoteDataSource {
+abstract class AuthRemoteDataSource {
+  Future<String> login(String email, String password);
+}
+
+class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final Dio dio;
 
-  AuthRemoteDataSource(this.dio);
+  AuthRemoteDataSourceImpl(this.dio);
 
+  @override
   Future<String> login(String email, String password) async {
-    // SIMULAR respuesta exitosa del backend
-    await Future.delayed(const Duration(seconds: 1)); // para simular delay
-    if (email == "test@test.com" && password == "test") {
-      return "fake_token_123456"; // token falso
-    } else {
-      throw Exception("Credenciales incorrectas (modo fake)");
+    try {
+      final response = await dio.post(
+        'administrador/login',
+        data: {
+          'correo': email,
+          'password': password,
+        },
+      );
+
+      if (response.statusCode == 200 && response.data['token'] != null) {
+        return response.data['token']; // Devuelve solo el token
+      } else {
+        throw Exception(response.data['error'] ?? 'Error desconocido');
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 }
