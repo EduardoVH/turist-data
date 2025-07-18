@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<String> login(String email, String password);
+  /// Realiza el login y retorna el token si es exitoso.
+  Future<String> login(String correo, String password);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -10,23 +11,36 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl(this.dio);
 
   @override
-  Future<String> login(String email, String password) async {
+  Future<String> login(String correo, String password) async {
     try {
       final response = await dio.post(
-        'administrador/login',
+        'https://turistdata-back.onrender.com/api/turistas/login',
         data: {
-          'correo': email,
+          'correo': correo,
           'password': password,
         },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
       );
 
-      if (response.statusCode == 200 && response.data['token'] != null) {
-        return response.data['token']; // Devuelve solo el token
+      if (response.statusCode == 200) {
+        // ✅ Extrae el token correctamente
+        return response.data['token'];
+      } else if (response.statusCode == 401) {
+        throw Exception('Credenciales incorrectas');
       } else {
-        throw Exception(response.data['error'] ?? 'Error desconocido');
+        throw Exception(response.data['error'] ?? 'Error en el servidor');
       }
+    } on DioError catch (e) {
+      final errorMessage = e.response?.data['message'] ??
+          e.response?.data['error'] ??
+          'Error en la petición';
+      throw Exception(errorMessage);
     } catch (e) {
-      rethrow;
+      throw Exception('Error inesperado: ${e.toString()}');
     }
   }
 }

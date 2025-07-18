@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:turist_data/features/login/data/datasources/auth_remote_datasource.dart';
 import 'package:turist_data/features/login/data/repositories/auth_repository_impl.dart';
 import 'package:turist_data/features/login/domain/repositories/auth_repository.dart';
@@ -11,46 +13,44 @@ import 'package:turist_data/features/register/domain/repositories/register_repos
 import 'package:turist_data/features/register/domain/usecases/register_usecase.dart';
 import 'package:turist_data/features/register/presentation/blocs/register_bloc.dart';
 
-
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  // HTTP Client (Dio)
-  sl.registerLazySingleton(() => Dio());
+  // 🌐 Configuración personalizada de Dio con baseUrl del .env
+  sl.registerLazySingleton(() => Dio(
+    BaseOptions(
+      baseUrl: dotenv.env['api'] ?? 'http://localhost:8000/',
+      connectTimeout: const Duration(seconds: 60),
+      receiveTimeout: const Duration(seconds: 60),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    ),
+  ));
 
   // === LOGIN ===
-
-  // DataSource
   sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(sl()),
+        () => AuthRemoteDataSourceImpl(sl()),
   );
 
-  // Repository
   sl.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(sl()),
+        () => AuthRepositoryImpl(sl()),
   );
 
-  // Use case
   sl.registerLazySingleton(() => LoginUseCase(sl()));
 
-  // Bloc
   sl.registerFactory(() => AuthBloc(sl()));
 
   // === REGISTER ===
-
-  // DataSource
   sl.registerLazySingleton<RegisterRemoteDataSource>(
-    () => RegisterRemoteDataSourceImpl(sl()),
+        () => RegisterRemoteDataSourceImpl(sl()),
   );
 
-  // Repository
   sl.registerLazySingleton<RegisterRepository>(
-    () => RegisterRepositoryImpl(remoteDataSource: sl()),
+        () => RegisterRepositoryImpl(remoteDataSource: sl()),
   );
 
-  // Use case
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
 
-  // Bloc
   sl.registerFactory(() => RegisterBloc(registerUseCase: sl()));
 }

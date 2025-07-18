@@ -44,10 +44,12 @@ class _LoginFormState extends State<LoginForm> {
   bool _isLoading = false;
 
   void _onLoginPressed() {
-    final email = _emailController.text.trim();
+    final correo = _emailController.text.trim();
     final password = _passwordController.text;
 
-    context.read<AuthBloc>().add(LoginRequested(email: email, password: password));
+    context.read<AuthBloc>().add(
+      LoginRequested(correo: correo, password: password),
+    );
 
     setState(() => _isLoading = true);
   }
@@ -104,11 +106,9 @@ class _LoginFormState extends State<LoginForm> {
                       child: IconButton(
                         icon: const Icon(Icons.close, size: 28),
                         tooltip: 'Cerrar',
-                        onPressed: () => context.go('/previo'), // Reemplaza con tu ruta deseada
+                        onPressed: () => context.go('/previo'),
                       ),
                     ),
-
-
                     const SizedBox(height: 40),
                     const CircleAvatar(
                       radius: 36,

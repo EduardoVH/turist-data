@@ -11,14 +11,19 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   }
 
   Future<void> _onRegisterRequested(
-    RegisterRequested event,
-    Emitter<RegisterState> emit,
-  ) async {
+      RegisterRequested event,
+      Emitter<RegisterState> emit,
+      ) async {
     emit(RegisterLoading());
-    final result = await registerUseCase(event.email, event.password);
+    final result = await registerUseCase(
+      event.nombre,
+      event.correo,
+      event.password,
+    );
     result.fold(
-      (failure) => emit(RegisterError(failure.toString())),
-      (message) => emit(RegisterSuccess(message)),
+          (failure) => emit(RegisterError(failure.toString())),
+          (message) => emit(RegisterSuccess(message)),
     );
   }
+
 }

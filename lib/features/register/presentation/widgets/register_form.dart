@@ -14,6 +14,7 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
+  final _nombreController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -21,7 +22,8 @@ class _RegisterFormState extends State<RegisterForm> {
   bool _isLoading = false;
 
   void _onRegisterPressed() {
-    final email = _emailController.text.trim();
+    final nombre = _nombreController.text.trim();
+    final correo = _emailController.text.trim();
     final password = _passwordController.text;
     final confirm = _confirmPasswordController.text;
 
@@ -33,8 +35,8 @@ class _RegisterFormState extends State<RegisterForm> {
     }
 
     context.read<RegisterBloc>().add(
-          RegisterRequested(email: email, password: password),
-        );
+      RegisterRequested(nombre: nombre, correo: correo, password: password),
+    );
 
     setState(() => _isLoading = true);
   }
@@ -89,7 +91,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         child: IconButton(
                           icon: const Icon(Icons.close, size: 28),
                           tooltip: 'Cerrar',
-                          onPressed: () => context.go('/'), // Reemplaza con tu ruta deseada
+                          onPressed: () => context.go('/'),
                         ),
                       ),
                       const SizedBox(height: 40),
@@ -105,6 +107,11 @@ class _RegisterFormState extends State<RegisterForm> {
                         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 32),
+                      _InputField(
+                        controller: _nombreController,
+                        label: 'Nombre completo',
+                      ),
+                      const SizedBox(height: 16),
                       _InputField(
                         controller: _emailController,
                         label: 'Correo electrónico',
@@ -131,17 +138,17 @@ class _RegisterFormState extends State<RegisterForm> {
                         ),
                         child: _isLoading
                             ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                    strokeWidth: 2, color: Colors.white),
-                              )
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: Colors.white),
+                        )
                             : const Text('Registrarse', style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
                       const SizedBox(height: 16),
                       Center(
                         child: GestureDetector(
-                           onTap: () => context.go(RouterConstants.login),
+                          onTap: () => context.go(RouterConstants.login),
                           child: const Text.rich(
                             TextSpan(
                               text: '¿Ya tienes cuenta? ',
@@ -150,11 +157,11 @@ class _RegisterFormState extends State<RegisterForm> {
                                   text: 'Iniciar sesión',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                ],
+                              ],
                             ),
                           ),
                         ),
-                        ),
+                      ),
                     ],
                   ),
                 ),

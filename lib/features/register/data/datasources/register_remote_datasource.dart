@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 abstract class RegisterRemoteDataSource {
-  Future<String> register(String email, String password);
+  Future<String> register(String nombre, String email, String password);
 }
 
 class RegisterRemoteDataSourceImpl implements RegisterRemoteDataSource {
@@ -10,12 +10,13 @@ class RegisterRemoteDataSourceImpl implements RegisterRemoteDataSource {
   RegisterRemoteDataSourceImpl(this.dio);
 
   @override
-  Future<String> register(String email, String password) async {
+  Future<String> register(String nombre, String email, String password) async {
     try {
       final response = await dio.post(
-        'administrador/register',
+        'https://turistdata-back.onrender.com/api/turistas',
         data: {
-          'correo': email, // Cambia a 'email' si tu API lo requiere
+          'nombre': nombre,
+          'correo': email,
           'password': password,
         },
       );
@@ -28,7 +29,7 @@ class RegisterRemoteDataSourceImpl implements RegisterRemoteDataSource {
             'Datos de registro inválidos';
         throw Exception(errorMessage);
       } else if (response.statusCode == 409) {
-        throw Exception('El email ya está registrado');
+        throw Exception('El correo ya está registrado');
       } else {
         final errorMessage = response.data['message'] ??
             response.data['error'] ??

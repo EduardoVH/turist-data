@@ -1,9 +1,21 @@
-// presentation/blocs/auth_event.dart
-abstract class AuthEvent {}
+import 'package:equatable/equatable.dart';
+
+abstract class AuthEvent extends Equatable {
+  const AuthEvent();
+
+  @override
+  List<Object?> get props => [];
+}
 
 class LoginRequested extends AuthEvent {
-  final String email;
+  final String correo;
   final String password;
 
-  LoginRequested({required this.email, required this.password});
+  const LoginRequested({
+    required this.correo,
+    required this.password,
+  });
+
+  @override
+  List<Object?> get props => [correo, password];
 }

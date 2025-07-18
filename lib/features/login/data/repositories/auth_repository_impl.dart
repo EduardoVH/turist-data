@@ -9,10 +9,9 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, String>> login(String email, String password) async {
+  Future<Either<Failure, String>> login(String correo, String password) async {
     try {
-      final token = await remoteDataSource.login(email, password);
-      // No uses 'as String', ya que token ya debe ser String.
+      final token = await remoteDataSource.login(correo, password);
       return Right(token);
     } catch (e) {
       return Left(Failure('Login fallido: ${e.toString()}'));

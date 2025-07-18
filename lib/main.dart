@@ -3,9 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:turist_data/core/di/injection.dart';
 import 'package:turist_data/core/router/app_router.dart';
 import 'package:turist_data/features/login/presentation/bloc/auth_bloc.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   await init();
   runApp(const MyApp());
 }

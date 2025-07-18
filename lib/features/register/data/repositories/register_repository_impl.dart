@@ -9,9 +9,9 @@ class RegisterRepositoryImpl implements RegisterRepository {
 
   @override
   Future<Either<Exception, String>> register(
-      String email, String password) async {
+      String nombre, String correo, String password) async {
     try {
-      final message = await remoteDataSource.register(email, password);
+      final message = await remoteDataSource.register(nombre, correo, password);
       return Right(message);
     } catch (e) {
       return Left(Exception(e.toString()));
