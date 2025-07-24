@@ -12,6 +12,13 @@ import '../../features/history/presentation/pages/history_page.dart';
 import '../../features/privacy_policy/presentation/pages/privacy_policy_page.dart';
 import '../../features/preview/presentation/pages/preview_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/establecimiento/presentation/pages/establecimiento.dart';
+import 'package:turist_data/features/establecimiento/presentation/blocs/establecimiento_bloc.dart';
+import 'package:turist_data/features/establecimiento/presentation/blocs/establecimiento_event.dart';
+import 'package:turist_data/features/estadistica/presentation/pages/estadisticas.dart';
+import 'package:turist_data/features/comentary/presentation/pages/comentary.dart';
+import 'package:turist_data/features/events/presentation/bloc/eventos_bloc.dart';
+
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -34,7 +41,10 @@ class AppRouter {
       ),
       GoRoute(
         path: RouterConstants.eventos,
-        builder: (context, state) => const EventsPage(),
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<EventosBloc>()..add(LoadEventosEspeciales()),
+          child: const EventsPage(),
+        ),
       ),
       GoRoute(
         path: RouterConstants.explore,
@@ -64,6 +74,29 @@ class AppRouter {
         path: RouterConstants.profile,
         builder: (context, state) => const ProfilePage(),
       ),
+
+      // ✅ Ruta actualizada con BlocProvider
+      GoRoute(
+        path: RouterConstants.establecimiento,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<EstablecimientoBloc>()..add(LoadEstablecimientos()),
+          child: const EstablecimientoHomePage(),
+        ),
+      ),
+
+      GoRoute(
+        path: RouterConstants.estadisticas,
+        builder: (context, state) => const EstadisticasPage(),
+      ),
+
+
+      GoRoute(
+        path: RouterConstants.comentarios,
+        builder: (context, state) => const CommentPage(),
+      ),
+
+
+
     ],
   );
 }
@@ -81,4 +114,9 @@ class RouterConstants {
   static const String profile = '/profile';
   static const String historial = '/historial';
   static const String chat = '/chat'; // pendiente
+  static const String establecimiento = '/establecimiento';
+  static const String estadisticas = '/estadisticas';
+  static const String comentarios = '/comentarios';
+
+
 }

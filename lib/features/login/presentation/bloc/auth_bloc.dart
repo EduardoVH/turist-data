@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/usecases/login_usecase.dart';
+
 import 'auth_event.dart';
 import 'auth_state.dart';
 
@@ -21,19 +22,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final result = await loginUseCase(event.correo, event.password);
 
     result.fold(
-          (failure) => emit(AuthFailure(failure.message)),
-          (token) => emit(AuthSuccess(token)),
-    );
-    /// ---------------------------
+      // En caso de error (failure)
+          (failure) {
+        emit(AuthFailure(failure.message));
+      },
 
-    /// Si quieres usar modo fake para pruebas locales, comenta el bloque de arriba
-    /*
-    await Future.delayed(const Duration(seconds: 1)); // simula latencia
-    if (event.correo == "test@test.com" && event.password == "test") {
-      emit(AuthSuccess("fake_token_123456"));
-    } else {
-      emit(AuthFailure("Credenciales incorrectas (modo fake)"));
-    }
-    */
+      // En caso de éxito (token)
+          (token) {
+        print('Correo: ${event.correo}');
+        // Emitimos token y el correo que viene en el evento para mostrarlo luego
+        emit(AuthSuccess(token, event.correo));
+      },
+    );
   }
 }

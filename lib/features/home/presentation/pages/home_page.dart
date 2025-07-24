@@ -1,18 +1,19 @@
-import 'package:turist_data/core/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:turist_data/core/router/app_router.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final Color lightGreen = const Color(0xFFE6F2E6);
-
+  final Color lightGreen = const Color(0xFFF0F9F3);
   int _selectedIndex = 0;
+
+  String userEmail = '';
 
   final List<String> _routes = [
     RouterConstants.home,
@@ -21,10 +22,21 @@ class _HomePageState extends State<HomePage> {
     RouterConstants.profile,
   ];
 
-  void _onItemTapped(int index) {
+  @override
+  void initState() {
+    super.initState();
+    _loadUserEmail();
+  }
+
+  Future<void> _loadUserEmail() async {
+    final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _selectedIndex = index;
+      userEmail = prefs.getString('userEmail') ?? 'Usuario';
     });
+  }
+
+  void _onItemTapped(int index) {
+    setState(() => _selectedIndex = index);
     context.go(_routes[index]);
   }
 
@@ -45,13 +57,13 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Perfil'),
         ],
       ),
-
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // 🎉 Imagen principal con superposición y botón
               Stack(
                 children: [
                   ClipRRect(
@@ -63,76 +75,88 @@ class _HomePageState extends State<HomePage> {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  Positioned(
-                    bottom: 10,
-                    left: 15,
-                    child: const Text(
-                      'Nuevo evento en\nCancún 🎉',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        shadows: [Shadow(blurRadius: 5, color: Colors.black)],
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        gradient: LinearGradient(
+                          colors: [Colors.black.withOpacity(0.3), Colors.transparent],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                        ),
                       ),
                     ),
                   ),
                   Positioned(
-                    bottom: 10,
+                    bottom: 20,
+                    left: 15,
+                    child: Text(
+                      'Nuevo evento en Cancún 🎉',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        shadows: [Shadow(blurRadius: 6, color: Colors.black)],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 15,
                     right: 15,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.teal,
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         shape: const StadiumBorder(),
                       ),
-                      onPressed: () {
-                        context.go(RouterConstants.explore);
-                      },
-                      child: const Text('Ver'),
+                      onPressed: () => context.go(RouterConstants.explore),
+                      child: const Text('Ver', style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-              const Text(
-                'Bienvenido, Alex!',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+
+              const SizedBox(height: 24),
+
+              // 👋 Bienvenida destacada con email dinámico
+              Text(
+                'Bienvenido, $userEmail!',
+                style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.black87),
               ),
               const SizedBox(height: 5),
-              const Text(
-                'Descubra los mejores lugares de comida de\nMéxico',
-                style: TextStyle(fontSize: 14),
+              Text(
+                'Descubre los mejores lugares gastronómicos de México.',
+                style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
               ),
-              const SizedBox(height: 20),
-              const Text(
-                'Acceso rápido',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
 
-              // QuickAccessCards con navegación a detalle
-              QuickAccessCard(
-                title: 'Destinos Populares',
-                subtitle: 'Descubre lugares fantásticos',
-                description: 'Explora los destinos turísticos más populares de México, con recomendaciones personalizadas y vistas impresionantes.',
-                imageUrl: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90',
+              const SizedBox(height: 24),
+              const Text(
+                '⚡ Acceso rápido',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black87),
               ),
+              const SizedBox(height: 12),
+
+              // 🔗 Tarjetas de acceso con diseño atractivo
               QuickAccessCard(
                 title: 'Eventos especiales',
                 subtitle: 'Exclusive dining experiences.',
-                description: 'No te pierdas eventos únicos como ferias gastronómicas, festivales culturales y celebraciones locales imperdibles.',
+                description: 'No te pierdas eventos únicos como ferias...',
                 imageUrl: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092',
-              ),
-              QuickAccessCard(
-                title: 'Sugerencias del sistema',
-                subtitle: 'Opciones gastronómicas personalizadas.',
-                description: 'Nuestro sistema inteligente te sugiere lugares y eventos según tus gustos, ubicación y experiencias previas.',
-                imageUrl: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092',
+                onPressed: () => context.go('/eventos'),
               ),
               QuickAccessCard(
                 title: 'Chat',
-                subtitle: 'Obtenga asistencia en cualquier momento.',
-                description: 'Conéctate con nuestro equipo de soporte o con otros viajeros para resolver dudas, compartir experiencias o recibir ayuda.',
+                subtitle: 'Soporte y comunidad.',
+                description: 'Conéctate con nuestro equipo o con viajeros para compartir experiencias.',
                 imageUrl: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092',
+                onPressed: () => context.go('/chat'),
+              ),
+              QuickAccessCard(
+                title: 'Establecimientos',
+                subtitle: 'Restaurantes disponibles.',
+                description: 'Explora los mejores lugares recomendados cerca de ti.',
+                imageUrl: 'https://images.unsplash.com/photo-1600891964599-f61ba0e24092',
+                onPressed: () => context.go('/establecimiento'),
               ),
             ],
           ),
@@ -147,6 +171,7 @@ class QuickAccessCard extends StatelessWidget {
   final String subtitle;
   final String description;
   final String imageUrl;
+  final VoidCallback onPressed;
 
   const QuickAccessCard({
     super.key,
@@ -154,19 +179,30 @@ class QuickAccessCard extends StatelessWidget {
     required this.subtitle,
     required this.description,
     required this.imageUrl,
+    required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeOut,
+      margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: const Color.fromRGBO(255, 255, 255, 0.85),
-        borderRadius: BorderRadius.circular(12),
+        color: Colors.white.withOpacity(0.85),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.teal.withOpacity(0.08),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
       child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(12),
           child: Image.network(
             imageUrl,
             width: 60,
@@ -174,86 +210,16 @@ class QuickAccessCard extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(subtitle),
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => QuickAccessDetailPage(
-                title: title,
-                subtitle: subtitle,
-                description: description,
-                imageUrl: imageUrl,
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class QuickAccessDetailPage extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final String description;
-  final String imageUrl;
-
-  const QuickAccessDetailPage({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    required this.description,
-    required this.imageUrl,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF0F9F3),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black87),
-        title: Text(title),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Hero(
-            tag: title,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(0),
-              child: Image.network(
-                imageUrl,
-                height: 250,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.teal,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  description,
-                  style: const TextStyle(fontSize: 15, height: 1.5),
-                ),
-              ],
-            ),
-          ),
-        ],
+        title: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black87),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 2),
+          child: Text(subtitle, style: TextStyle(fontSize: 13, color: Colors.grey)),
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.teal),
+        onTap: onPressed,
       ),
     );
   }

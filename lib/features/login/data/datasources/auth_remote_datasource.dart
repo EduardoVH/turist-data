@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:turist_data/core/session/usuario_session.dart';
 
 abstract class AuthRemoteDataSource {
-  /// Realiza el login y retorna el token si es exitoso.
   Future<String> login(String correo, String password);
 }
 
@@ -19,15 +19,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           'correo': correo,
           'password': password,
         },
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        ),
+        options: Options(headers: {'Content-Type': 'application/json'}),
       );
 
       if (response.statusCode == 200) {
-        // ✅ Extrae el token correctamente
+        // ✅ Imprime la respuesta para verificar estructura
+        print('Respuesta completa: ${response.data}');
+
+        // ✅ Accede directamente si los datos vienen en el cuerpo
+        UsuarioSession.nombre = response.data['nombre'] ?? '';
+        UsuarioSession.correo = response.data['correo'] ?? '';
+
         return response.data['token'];
       } else if (response.statusCode == 401) {
         throw Exception('Credenciales incorrectas');

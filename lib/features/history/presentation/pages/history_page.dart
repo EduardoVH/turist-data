@@ -12,42 +12,42 @@ class _HistoryPageState extends State<HistoryPage> {
   final List<Map<String, String>> historial = [
     {
       'image':
-          'https://149391556.v2.pressablecdn.com/wp-content/uploads/2020/11/DSCF6047-scaled.jpg',
+      'https://149391556.v2.pressablecdn.com/wp-content/uploads/2020/11/DSCF6047-scaled.jpg',
       'fecha': '01/07/2025',
       'lugar': 'Oaxaca',
       'comentario': 'Un lugar muy agradable',
     },
     {
       'image':
-          'https://a.travel-assets.com/findyours-php/viewfinder/images/res70/245000/245511-Chiapas.jpg',
+      'https://a.travel-assets.com/findyours-php/viewfinder/images/res70/245000/245511-Chiapas.jpg',
       'fecha': '28/06/2025',
       'lugar': 'San Cristóbal',
       'comentario': 'Excelente comida y arquitectura',
     },
     {
       'image':
-          'https://mbmarcobeteta.com/wp-content/uploads/2021/06/shutterstock_228270220-scaled.jpg',
+      'https://mbmarcobeteta.com/wp-content/uploads/2021/06/shutterstock_228270220-scaled.jpg',
       'fecha': '20/06/2025',
       'lugar': 'Palenque',
       'comentario': 'Historia maya y naturaleza',
     },
     {
       'image':
-          'https://149391556.v2.pressablecdn.com/wp-content/uploads/2020/11/DSCF6047-scaled.jpg',
+      'https://149391556.v2.pressablecdn.com/wp-content/uploads/2020/11/DSCF6047-scaled.jpg',
       'fecha': '01/07/2025',
       'lugar': 'Oaxaca',
       'comentario': 'Un lugar muy agradable',
     },
     {
       'image':
-          'https://a.travel-assets.com/findyours-php/viewfinder/images/res70/245000/245511-Chiapas.jpg',
+      'https://a.travel-assets.com/findyours-php/viewfinder/images/res70/245000/245511-Chiapas.jpg',
       'fecha': '28/06/2025',
       'lugar': 'San Cristóbal',
       'comentario': 'Excelente comida y arquitectura',
     },
     {
       'image':
-          'https://mbmarcobeteta.com/wp-content/uploads/2021/06/shutterstock_228270220-scaled.jpg',
+      'https://mbmarcobeteta.com/wp-content/uploads/2021/06/shutterstock_228270220-scaled.jpg',
       'fecha': '20/06/2025',
       'lugar': 'Palenque',
       'comentario': 'Historia maya y naturaleza',
@@ -112,7 +112,7 @@ class _HistoryPageState extends State<HistoryPage> {
             ),
           ),
           Positioned(
-            bottom: 60, // para no tapar el navbar
+            bottom: 60,
             left: 0,
             right: 0,
             child: Image.network(
@@ -143,71 +143,75 @@ class _HistoryPageState extends State<HistoryPage> {
                       itemCount: historial.length,
                       itemBuilder: (context, index) {
                         final item = historial[index];
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 18),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.06),
-                                blurRadius: 8,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              ClipRRect(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(16),
-                                  bottomLeft: Radius.circular(16),
+                        return InkWell(
+                          onTap: () {
+                            context.push('/comentarios');
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom: 18),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.06),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
                                 ),
-                                child: Image.network(
-                                  item['image'] ?? '',
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) =>
-                                      const Icon(Icons.image_not_supported),
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        item['lugar'] ?? '',
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 6),
-                                      Text(
-                                        item['comentario'] ?? '',
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 6),
-                                      Text(
-                                        item['fecha'] ?? '',
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(16),
+                                    bottomLeft: Radius.circular(16),
+                                  ),
+                                  child: Image.network(
+                                    item['image'] ?? '',
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) =>
+                                    const Icon(Icons.image_not_supported),
                                   ),
                                 ),
-                              ),
-                            ],
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          item['lugar'] ?? '',
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          item['comentario'] ?? '',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          item['fecha'] ?? '',
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },

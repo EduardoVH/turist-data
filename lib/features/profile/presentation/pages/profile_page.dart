@@ -36,6 +36,26 @@ class ProfilePage extends StatelessWidget {
           ),
         ),
 
+
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  onPressed: () => context.go('/home'), // ✅ Asegúrate que esta ruta existe
+                ),
+              ),
+            ),
+          ),
+        ),
+
+
         // Contenido principal centrado
         SafeArea(
           child: Center(
@@ -66,6 +86,8 @@ class ProfilePage extends StatelessWidget {
                     style: const TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                   const SizedBox(height: 36),
+
+                  // Botón: Cerrar sesión
                   ElevatedButton(
                     onPressed: () => context.go('/'),
                     style: ElevatedButton.styleFrom(
@@ -77,8 +99,10 @@ class ProfilePage extends StatelessWidget {
                     child: const Text('Cerrar Sesión', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                   const SizedBox(height: 16),
+
+                  // Botón: Ver historial
                   ElevatedButton(
-                    onPressed: () => context.go('/historial'), // 👈 Asegúrate de tener esta ruta
+                    onPressed: () => context.go('/historial'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey[300],
                       foregroundColor: Colors.black87,
@@ -87,6 +111,10 @@ class ProfilePage extends StatelessWidget {
                     ),
                     child: const Text('Ver Historial', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
+                  const SizedBox(height: 16),
+
+
+
                 ],
               ),
             ),

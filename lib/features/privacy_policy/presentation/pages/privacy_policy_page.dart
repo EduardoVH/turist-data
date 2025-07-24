@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:turist_data/core/session/usuario_session.dart';
 
 class PrivacyPolicyPage extends StatelessWidget {
   const PrivacyPolicyPage({super.key});
 
-  final String userName = 'Alfredo Garcia';
-  final String userEmail = 'AlfredoGarcia@example.com';
+  @override
+  Widget build(BuildContext context) {
+    final String userName = UsuarioSession.nombre.isNotEmpty ? UsuarioSession.nombre : 'Usuario';
+    final String userEmail = UsuarioSession.correo.isNotEmpty ? UsuarioSession.correo : 'Sin correo';
 
-  final String policyText = '''
+    const String policyText = '''
 De conformidad con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, informamos:
 
 ¿QUIÉNES SOMOS?
-Empresa dedicada a servicios de información turística 📍 Avenida Primera Poniente Sur, núm. 228, col. Santa Anita, Centro, C.P. 29150, Suchiapa, Chiapas
+Empresa dedicada a servicios de información turística  Avenida Primera Poniente Sur, núm. 228, col. Santa Anita, Centro, C.P. 29150, Suchiapa, Chiapas
 
 ¿QUÉ DATOS OBTENEMOS?
 • Nombre de usuario
@@ -19,7 +22,7 @@ Empresa dedicada a servicios de información turística 📍 Avenida Primera Pon
 • Contraseña (cifrada)
 • Ubicación geográfica
 
-❌ NO solicitamos: Datos bancarios, números de tarjeta, teléfonos o fotografías
+ NO solicitamos: Datos bancarios, números de tarjeta, teléfonos o fotografías
 
 ¿PARA QUÉ USAMOS SUS DATOS?
 • Uso principal: Crear su cuenta y brindar servicios turísticos
@@ -29,15 +32,13 @@ SUS DERECHOS (ARCO)
 Puede Acceder, Rectificar, Cancelar u Oponerse al uso de sus datos.
 
 ¿CÓMO EJERCER SUS DERECHOS?
-📧 Contacto: turistdata@ejemplo.com
-⏰ Respuesta: Máximo 20 días hábiles
+ Contacto: turistdata@ejemplo.com
+ Respuesta: Máximo 20 días hábiles
 
 SEGURIDAD
-🔐 Sus datos están protegidos con medidas de seguridad técnicas y administrativas.
+ Sus datos están protegidos con medidas de seguridad técnicas y administrativas.
 ''';
 
-  @override
-  Widget build(BuildContext context) {
     return Stack(
       children: [
         Container(color: const Color(0xFFF0F9F3)),
@@ -102,8 +103,6 @@ SEGURIDAD
                   ),
                 ),
                 const SizedBox(height: 24),
-
-                // 🔹 TÍTULO CENTRADO DE "TURISTDATA"
                 const Text(
                   'TURISTDATA',
                   textAlign: TextAlign.center,
@@ -114,17 +113,14 @@ SEGURIDAD
                     letterSpacing: 1,
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
-                // 🔹 TEXTO CON SCROLL
-                Expanded(
+                const Expanded(
                   child: Scrollbar(
                     thumbVisibility: true,
                     child: SingleChildScrollView(
                       child: Text(
                         policyText,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           color: Colors.black87,
                           backgroundColor: Colors.transparent,
@@ -135,10 +131,7 @@ SEGURIDAD
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 24),
-
-                // 🔹 BOTONES
                 Row(
                   children: [
                     Expanded(
@@ -147,7 +140,7 @@ SEGURIDAD
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.teal,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          padding: EdgeInsets.symmetric(vertical: 14),
                         ),
                         child: const Text('Aceptar'),
                       ),
@@ -158,7 +151,7 @@ SEGURIDAD
                         onPressed: () => context.go('/'),
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: Colors.teal),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          padding: EdgeInsets.symmetric(vertical: 14),
                           foregroundColor: Colors.teal,
                         ),
                         child: const Text('Rechazar'),
@@ -166,7 +159,6 @@ SEGURIDAD
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 16),
               ],
             ),
