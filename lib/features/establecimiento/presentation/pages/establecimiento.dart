@@ -7,7 +7,6 @@ import '../blocs/establecimiento_bloc.dart';
 import '../blocs/establecimiento_event.dart';
 import '../blocs/establecimiento_state.dart';
 import 'package:turist_data/core/router/app_router.dart';
-import 'package:turist_data/features/map/presentation/pages/map_page.dart';
 
 class EstablecimientoHomePage extends StatefulWidget {
   const EstablecimientoHomePage({super.key});
@@ -185,7 +184,6 @@ class _ExpandableEstablecimientoCardState extends State<_ExpandableEstablecimien
         ),
         child: Column(
           children: [
-            // Imagen de fondo con gradiente y título
             ClipRRect(
               borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
               child: Stack(
@@ -196,7 +194,6 @@ class _ExpandableEstablecimientoCardState extends State<_ExpandableEstablecimien
                     color: Colors.grey[300],
                     child: widget.subtitle.isNotEmpty
                         ? Image.network(
-                      // Puedes cambiar aquí por imagen real si la tienes en datos
                       'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38',
                       fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, size: 50),
@@ -243,7 +240,6 @@ class _ExpandableEstablecimientoCardState extends State<_ExpandableEstablecimien
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     const SizedBox(height: 12),
                     Row(
                       children: [
@@ -305,51 +301,58 @@ class _ExpandableEstablecimientoCardState extends State<_ExpandableEstablecimien
                       ],
                     ),
                     const SizedBox(height: 20),
-                    Center(
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          final location = (widget.latitude != null && widget.longitude != null)
-                              ? LatLng(widget.latitude!, widget.longitude!)
-                              : null;
-
-                          if (location != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => MapPage(
-                                  title: widget.title,
-                                  location: location,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            if (location != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => MapPage(
+                                    title: widget.title,
+                                    location: location,
+                                  ),
                                 ),
-                              ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Coordenadas no disponibles")),
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.teal,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-                          elevation: 6,
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Coordenadas no disponibles")),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.teal,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                            elevation: 6,
+                          ),
+                          icon: const Icon(Icons.map),
+                          label: const Text("Ver en mapa"),
                         ),
-                        icon: const Icon(Icons.map, size: 20),
-                        label: const Text(
-                          "Ver en mapa",
-                          style: TextStyle(fontSize: 16),
+                        const SizedBox(width: 12),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            context.push('/comentarios');  // Aquí la redirección a la página de comentarios
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange.shade600,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                            elevation: 6,
+                          ),
+                          icon: const Icon(Icons.comment),
+                          label: const Text("Ver comentarios"),
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),
               ),
-              crossFadeState:
-              _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+              crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
               duration: const Duration(milliseconds: 300),
             ),
-
-            // Botón expandir/colapsar
             Container(
               decoration: BoxDecoration(
                 color: Colors.teal.shade50,

@@ -58,7 +58,7 @@ class EventsPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final evento = eventos[index];
                   return AnimatedOpacity(
-                    duration: Duration(milliseconds: 400),
+                    duration: const Duration(milliseconds: 400),
                     opacity: 1.0,
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 16),
@@ -118,6 +118,9 @@ class EventCard extends StatelessWidget {
     final estadoEvento = data['estado'] ?? 'Desconocido';
     final estadoColor = getEstadoColor(estadoEvento);
 
+    // Aquí usamos id_lugar en vez de id_destino
+    final idLugar = data['id_lugar'] ?? 'N/A';
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeOut,
@@ -129,7 +132,7 @@ class EventCard extends StatelessWidget {
           BoxShadow(
             color: Colors.teal.withOpacity(0.15),
             blurRadius: 20,
-            offset: Offset(0, 10),
+            offset: const Offset(0, 10),
           ),
         ],
       ),
@@ -187,7 +190,7 @@ class EventCard extends StatelessWidget {
                   Flexible(
                     child: Chip(
                       label: Text(
-                        data['estado_afectado'] ?? 'Desconocido',
+                        idLugar.toString(),
                         style: const TextStyle(color: Colors.teal),
                         overflow: TextOverflow.ellipsis,
                       ),

@@ -1,16 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:turist_data/core/session/usuario_session.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class PrivacyPolicyPage extends StatelessWidget {
+class PrivacyPolicyPage extends StatefulWidget {
   const PrivacyPolicyPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final String userName = UsuarioSession.nombre.isNotEmpty ? UsuarioSession.nombre : 'Usuario';
-    final String userEmail = UsuarioSession.correo.isNotEmpty ? UsuarioSession.correo : 'Sin correo';
+  State<PrivacyPolicyPage> createState() => _PrivacyPolicyPageState();
+}
 
-    const String policyText = '''
+class _PrivacyPolicyPageState extends State<PrivacyPolicyPage> {
+  String userEmail = 'Sin correo';
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAcceptanceAndLoadEmail();
+  }
+
+  Future<void> _checkAcceptanceAndLoadEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final accepted = prefs.getBool('privacyAccepted') ?? false;
+
+    if (accepted) {
+      // Ya aceptó, ir a home directamente y no mostrar esta página
+      // Usamos WidgetsBinding para asegurarnos que el contexto está listo
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.go('/home'); // O la ruta que corresponda
+      });
+      return;
+    }
+
+    // Si no ha aceptado, cargamos email para mostrar
+    setState(() {
+      userEmail = prefs.getString('userEmail') ?? 'Sin correo';
+    });
+  }
+
+  Future<void> _acceptPrivacyPolicy() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('privacyAccepted', true);
+    context.go('/home'); // Navegar a home o la siguiente pantalla
+  }
+
+  static const String policyText = '''
 De conformidad con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, informamos:
 
 ¿QUIÉNES SOMOS?
@@ -39,6 +73,8 @@ SEGURIDAD
  Sus datos están protegidos con medidas de seguridad técnicas y administrativas.
 ''';
 
+  @override
+  Widget build(BuildContext context) {
     return Stack(
       children: [
         Container(color: const Color(0xFFF0F9F3)),
@@ -85,20 +121,11 @@ SEGURIDAD
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  userName,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
                   userEmail,
                   style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -136,11 +163,11 @@ SEGURIDAD
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () => context.go('/home'),
+                        onPressed: _acceptPrivacyPolicy,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.teal,
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(vertical: 14),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
                         ),
                         child: const Text('Aceptar'),
                       ),
@@ -151,7 +178,7 @@ SEGURIDAD
                         onPressed: () => context.go('/'),
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: Colors.teal),
-                          padding: EdgeInsets.symmetric(vertical: 14),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
                           foregroundColor: Colors.teal,
                         ),
                         child: const Text('Rechazar'),

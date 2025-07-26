@@ -18,6 +18,8 @@ import 'package:turist_data/features/establecimiento/presentation/blocs/establec
 import 'package:turist_data/features/estadistica/presentation/pages/estadisticas.dart';
 import 'package:turist_data/features/comentary/presentation/pages/comentary.dart';
 import 'package:turist_data/features/events/presentation/bloc/eventos_bloc.dart';
+import 'package:turist_data/features/chatbot/presentation/pages/chatbot_page.dart';
+
 
 
 class AppRouter {
@@ -95,6 +97,10 @@ class AppRouter {
         builder: (context, state) => const CommentPage(),
       ),
 
+      GoRoute(
+        path: RouterConstants.chat,
+        builder: (context, state) => const ChatBotPage(),
+      ),
 
 
     ],
@@ -113,7 +119,7 @@ class RouterConstants {
   static const String previo = '/previo';
   static const String profile = '/profile';
   static const String historial = '/historial';
-  static const String chat = '/chat'; // pendiente
+  static const String chat = '/chat';
   static const String establecimiento = '/establecimiento';
   static const String estadisticas = '/estadisticas';
   static const String comentarios = '/comentarios';

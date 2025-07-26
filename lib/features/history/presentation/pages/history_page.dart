@@ -144,9 +144,7 @@ class _HistoryPageState extends State<HistoryPage> {
                       itemBuilder: (context, index) {
                         final item = historial[index];
                         return InkWell(
-                          onTap: () {
-                            context.push('/comentarios');
-                          },
+
                           child: Container(
                             margin: const EdgeInsets.only(bottom: 18),
                             decoration: BoxDecoration(
