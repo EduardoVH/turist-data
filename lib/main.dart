@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(create: (_) => sl<AuthBloc>()),
-        // 🔸 Asegúrate que EventosBloc se cree en la vista correspondiente
+
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
