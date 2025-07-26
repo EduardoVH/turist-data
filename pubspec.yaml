@@ -18,6 +18,7 @@ dependencies:
   # Dependency Injection
   get_it: ^7.7.0
   google_generative_ai: ^0.3.2
+  flutter_rating_bar: ^4.0.0
 
   # State Management
   flutter_bloc: ^8.1.6
