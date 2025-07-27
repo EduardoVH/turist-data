@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:go_router/go_router.dart'; // para volver con context.pop
+import 'package:go_router/go_router.dart';
 
 class ChatBotPage extends StatefulWidget {
   const ChatBotPage({super.key});
@@ -31,7 +31,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
     );
   }
 
-  /// Enviar mensaje
+
   void _sendMessage() async {
     final userMessage = _controller.text.trim();
     if (userMessage.isEmpty || _isLoading) return;
@@ -50,7 +50,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
     });
   }
 
-  /// Obtener respuesta del modelo
+
   Future<String> _fetchBotResponse(String userMessage) async {
     try {
       final prompt = '''
@@ -61,7 +61,6 @@ class _ChatBotPageState extends State<ChatBotPage> {
       
       Pregunta del usuario: $userMessage
       ''';
-
       final response = await _model.generateContent([Content.text(prompt)]);
 
       if (response.text != null) {
@@ -74,7 +73,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
     }
   }
 
-  /// Limpiar el chat
+
   void _clearChat() {
     setState(() {
       _messages.clear();
@@ -93,8 +92,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // Vuelve al Home usando GoRouter
-            context.go('/'); // O RouterConstants.home si lo prefieres
+            context.go('/'); 
           },
         ),
         actions: [
