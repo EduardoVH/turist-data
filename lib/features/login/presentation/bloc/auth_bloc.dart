@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/usecases/login_usecase.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
@@ -16,24 +17,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ) async {
     emit(AuthLoading());
 
-    /// ---------------------------
-    /// MODO REAL (con backend)
     final result = await loginUseCase(event.correo, event.password);
 
-    result.fold(
-          (failure) => emit(AuthFailure(failure.message)),
-          (token) => emit(AuthSuccess(token)),
-    );
-    /// ---------------------------
+    await result.fold(
+          (failure) async {
+        emit(AuthFailure(failure.message));
+      },
+          (token) async {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token); // Guardar token
 
-    /// Si quieres usar modo fake para pruebas locales, comenta el bloque de arriba
-    /*
-    await Future.delayed(const Duration(seconds: 1)); // simula latencia
-    if (event.correo == "test@test.com" && event.password == "test") {
-      emit(AuthSuccess("fake_token_123456"));
-    } else {
-      emit(AuthFailure("Credenciales incorrectas (modo fake)"));
-    }
-    */
+        print('Correo: ${event.correo}');
+        emit(AuthSuccess(token, event.correo));
+      },
+    );
   }
 }

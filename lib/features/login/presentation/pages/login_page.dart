@@ -16,7 +16,8 @@ class LoginPage extends StatelessWidget {
         listener: (context, state) async {
           if (state is AuthSuccess) {
             final prefs = await SharedPreferences.getInstance();
-            await prefs.setString('token', state.token);
+            await prefs.setString('userEmail', state.email); // 👈 Nuevo
+
             if (context.mounted) context.go('/privacy');
           } else if (state is AuthFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -96,7 +97,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             SafeArea(
-              child: Padding(
+              child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -177,7 +178,8 @@ class _LoginFormState extends State<LoginForm> {
                   ],
                 ),
               ),
-            ),
+            )
+
           ],
         );
       },

@@ -1,8 +1,9 @@
-import 'package:turist_data/core/router/app_router.dart';
+import 'dart:convert';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:latlong2/latlong.dart';
-import '../../../map/presentation/pages/map_page.dart';
+import 'package:http/http.dart' as http;
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
@@ -13,181 +14,176 @@ class ExplorePage extends StatefulWidget {
 
 class _ExplorePageState extends State<ExplorePage> {
   final List<String> filters = const [
-    'Todos',
-    'Oaxaca',
-    'Yucatán',
-    'Quintana Roo',
-    'Chiapas',
+    'Aguascalientes',  'Baja California',   'Baja California Sur',
+    'Campeche', 'Chiapas', 'Chihuahua', 'CDMX',
+    'Coahuila',  'Colima',   'Durango',  'Guanajuato',
+    'Guerrero',  'Hidalgo', 'Jalisco', 'Edo. México',
+    'Michoacán', 'Morelos', 'Nayarit', 'Nuevo León',
+    'Oaxaca', 'Puebla', 'Querétaro',    'Quintana Roo',
+    'San Luis Potosí',   'Sinaloa','Sonora', 'Tabasco',
+    'Tamaulipas', 'Tlaxcala', 'Veracruz', 'Yucatán',
+    'Zacatecas'
   ];
 
-  final List<Map<String, dynamic>> destinations = const [
-    {
-      'title': 'Oaxaca',
-      'subtitle': 'Oaxaca',
-      'image': 'https://images.unsplash.com/photo-1570129477492-45c003edd2be',
-      'lat': 17.0732,
-      'lng': -96.7266,
-    },
-    {
-      'title': 'Yucatán',
-      'subtitle': 'Yucatán',
-      'image': 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90',
-      'lat': 20.7099,
-      'lng': -89.0943,
-    },
-    {
-      'title': 'Quintana Roo',
-      'subtitle': 'Quintana Roo',
-      'image': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
-      'lat': 19.1817,
-      'lng': -88.4791,
-    },
-    {
-      'title': 'Chiapas',
-      'subtitle': 'Chiapas',
-      'image': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
-      'lat': 16.7569,
-      'lng': -93.1292,
-    },
-    {
-      'title': 'Ciudad de México',
-      'subtitle': 'Ciudad de México',
-      'image': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
-      'lat': 19.4326,
-      'lng': -99.1332,
-    },
-    {
-      'title': 'Puebla',
-      'subtitle': 'Puebla',
-      'image': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
-      'lat': 19.0414,
-      'lng': -98.2063,
-    },
-  ];
-
+  List<Map<String, dynamic>> establecimientos = [];
+  String selectedState = 'CDMX';
   int _selectedIndex = 1;
+  bool isLoading = false;
+  String errorMessage = '';
 
-  void _onItemTapped(int index) {
+  @override
+  void initState() {
+    super.initState();
+    fetchEstablecimientos(selectedState);
+  }
+
+  Future<void> fetchEstablecimientos(String estado) async {
     setState(() {
-      _selectedIndex = index;
+      isLoading = true;
+      errorMessage = '';
+      establecimientos = [];
     });
 
-    final routes = [
-      RouterConstants.home,
-      RouterConstants.explore,
-      RouterConstants.eventos,
-      RouterConstants.chat,
-      RouterConstants.profile,
-    ];
+    final uri = Uri.parse(
+        'https://turistdata-back.onrender.com/api/establecimientos/estado?estado=${Uri.encodeComponent(estado)}');
 
+    try {
+      final response = await http.get(uri);
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        setState(() {
+          establecimientos =
+              data.map((e) => e as Map<String, dynamic>).toList();
+        });
+      } else {
+        setState(() {
+          errorMessage = 'Error al cargar datos: código ${response.statusCode}';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = 'Error en la conexión: $e';
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void _onItemTapped(int index) {
+    final routes = ['/home', '/explore', '/eventos', '/chat-welcome', '/profile'];
+    setState(() => _selectedIndex = index);
     context.go(routes[index]);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       backgroundColor: const Color(0xFFF0F9F3),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          'Destinos',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        actions: [IconButton(icon: const Icon(Icons.search), onPressed: () {})],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+      body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: filters.map((f) => Chip(label: Text(f))).toList(),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 16,
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
                 children: [
-                  ...List.generate(destinations.length ~/ 2, (i) {
-                    final first = destinations[i * 2];
-                    final second = (i * 2 + 1 < destinations.length)
-                        ? destinations[i * 2 + 1]
-                        : null;
-
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: Row(
-                        children: [
-                          Expanded(child: DestinationCard(data: first)),
-                          const SizedBox(width: 16),
-                          if (second != null)
-                            Expanded(child: DestinationCard(data: second))
-                          else
-                            const Expanded(child: SizedBox()),
-                        ],
-                      ),
-                    );
-                  }),
-                  const SizedBox(height: 8),
                   const Text(
-                    "Historial reciente",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    'Explora México',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    height: 170,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 4,
-                      separatorBuilder: (_, __) => const SizedBox(width: 12),
-                      itemBuilder: (context, i) {
-                        final history =
-                            destinations[(destinations.length - 1) - i];
-                        return SizedBox(
-                          width: 140,
-                          child: ClipRect(
-                            child: SingleChildScrollView(
-                              child: DestinationCard(data: history),
-                            ),
-                          ),
-                        );
-                      },
+                  const Spacer(),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.7),
+                      shape: BoxShape.circle,
+                      boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6)],
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () {},
                     ),
                   ),
-                  const SizedBox(height: 16),
                 ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              height: 160,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: SingleChildScrollView(
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: filters.map((estado) {
+                      final isSelected = estado == selectedState;
+                      return ChoiceChip(
+                        label: Text(
+                          estado,
+                          style: TextStyle(
+                            color: isSelected ? Colors.white : Colors.black,
+                          ),
+                        ),
+                        selected: isSelected,
+                        selectedColor: Colors.teal,
+                        backgroundColor: Colors.grey.shade200,
+                        onSelected: (_) {
+                          if (selectedState != estado) {
+                            setState(() {
+                              selectedState = estado;
+                            });
+                            fetchEstablecimientos(estado);
+                          }
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Expanded(
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : errorMessage.isNotEmpty
+                  ? Center(child: Text(errorMessage))
+                  : establecimientos.isEmpty
+                  ? const Center(child: Text('No se encontraron establecimientos.'))
+                  : ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: establecimientos.length,
+                itemBuilder: (_, index) {
+                  final est = establecimientos[index];
+                  return DestinationCard(data: est);
+                },
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.teal,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explorar'),
-          BottomNavigationBarItem(icon: Icon(Icons.event), label: 'Eventos'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble_outline),
-            label: 'Chat',
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(12),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: BottomNavigationBar(
+            backgroundColor: Colors.white.withOpacity(0.9),
+            currentIndex: _selectedIndex,
+            selectedItemColor: Colors.teal.shade700,
+            unselectedItemColor: Colors.grey.shade500,
+            type: BottomNavigationBarType.fixed,
+            onTap: _onItemTapped,
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
+              BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explorar'),
+              BottomNavigationBarItem(icon: Icon(Icons.event), label: 'Eventos'),
+              BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
+              BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Perfil',
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -195,53 +191,100 @@ class _ExplorePageState extends State<ExplorePage> {
 
 class DestinationCard extends StatelessWidget {
   final Map<String, dynamic> data;
-  const DestinationCard({super.key, required this.data});
+  final bool compact;
+  const DestinationCard({super.key, required this.data, this.compact = false});
 
   @override
   Widget build(BuildContext context) {
+    final title = data['nombre'] ?? 'Sin nombre';
+    final direccion = data['direccion'] ?? '';
+    final ciudad = data['ciudad'] ?? '';
+    final estado = data['estado'] ?? '';
+    final tipo = data['tipo'] ?? '';
+    final horario = data['horario'] ?? '';
+    final precio = data['precio'] ?? '';
+    final imageUrl = data['imagen'] ?? 'https://via.placeholder.com/150';
+
     return GestureDetector(
       onTap: () {
-        final lat = data['lat'];
-        final lng = data['lng'];
-        final title = data['title'];
 
-        if (lat != null && lng != null && title != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MapPage(
-                title: title as String,
-                location: LatLng(lat as double, lng as double),
-              ),
-            ),
-          );
-        }
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AspectRatio(
-            aspectRatio: 1,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 20),
+        height: compact ? 160 : 240,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(18),
               child: Image.network(
-                data['image'] as String,
+                imageUrl,
+                height: double.infinity,
+                width: double.infinity,
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) =>
-                    const Center(child: Icon(Icons.broken_image)),
+                const Icon(Icons.broken_image, size: 50),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            data['title'] as String,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Text(
-            data['subtitle'] as String,
-            style: const TextStyle(color: Colors.grey),
-          ),
-        ],
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                gradient: LinearGradient(
+                  colors: [Colors.black.withOpacity(0.6), Colors.transparent],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 16,
+              left: 16,
+              right: 16,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (direccion.isNotEmpty || ciudad.isNotEmpty || estado.isNotEmpty)
+                    Text(
+                      [direccion, ciudad, estado].where((e) => e.isNotEmpty).join(', '),
+                      style: const TextStyle(color: Colors.white70, fontSize: 14),
+                    ),
+                  if (tipo.isNotEmpty)
+                    Text(
+                      'Tipo: $tipo',
+                      style: const TextStyle(color: Colors.white70, fontSize: 14),
+                    ),
+                  if (horario.isNotEmpty)
+                    Text(
+                      'Horario: $horario',
+                      style: const TextStyle(color: Colors.white70, fontSize: 14),
+                    ),
+                  if (precio.isNotEmpty)
+                    Text(
+                      'Precio: \$${precio}',
+                      style: const TextStyle(color: Colors.white70, fontSize: 14),
+                    ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

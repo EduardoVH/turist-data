@@ -1,20 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
-  final String userName = 'Alfredo Garcia';
-  final String userEmail = 'AlfredoGarcia@example.com';
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  String userName = 'Usuario';
+  String userEmail = 'Sin correo';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString('userName') ?? 'Usuario';
+      userEmail = prefs.getString('userEmail') ?? 'Sin correo';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Fondo blanco puro
         Container(color: Colors.white),
-
-        // Ondas decorativas desde URL
         Positioned(
           top: 0,
           left: 0,
@@ -35,8 +52,23 @@ class ProfilePage extends StatelessWidget {
             errorBuilder: (_, __, ___) => const SizedBox(),
           ),
         ),
-
-        // Contenido principal centrado
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  onPressed: () => context.go('/home'),
+                ),
+              ),
+            ),
+          ),
+        ),
         SafeArea(
           child: Center(
             child: Padding(
@@ -78,15 +110,16 @@ class ProfilePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () => context.go('/historial'), // 👈 Asegúrate de tener esta ruta
+                    onPressed: () => context.go('/historial'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300],
+                      backgroundColor: Colors.grey,
                       foregroundColor: Colors.black87,
                       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 48),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     ),
                     child: const Text('Ver Historial', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),

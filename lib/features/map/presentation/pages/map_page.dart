@@ -14,8 +14,8 @@ class MapPage extends StatelessWidget {
       appBar: AppBar(title: Text(title)),
       body: FlutterMap(
         options: MapOptions(
-          initialCenter: location,
-          initialZoom: 13.0,
+          center: location,
+          zoom: 13.0,
         ),
         children: [
           TileLayer(
