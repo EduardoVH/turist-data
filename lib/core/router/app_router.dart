@@ -18,9 +18,8 @@ import 'package:turist_data/features/establecimiento/presentation/blocs/establec
 import 'package:turist_data/features/estadistica/presentation/pages/estadisticas.dart';
 import 'package:turist_data/features/comentary/presentation/pages/comentary.dart';
 import 'package:turist_data/features/events/presentation/bloc/eventos_bloc.dart';
-import 'package:turist_data/features/chatbot/presentation/pages/chatbot_page.dart';
-
-
+import 'package:turist_data/features/chatbot/presentation/pages/chatbot_page.dart'; // OJO: sin 'hide'
+import 'package:turist_data/features/chatbot/presentation/pages/chat_welcome_page.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -32,7 +31,7 @@ class AppRouter {
       ),
       GoRoute(
         path: RouterConstants.register,
-        builder:(context, state) => BlocProvider(
+        builder: (context, state) => BlocProvider(
           create: (context) => sl<RegisterBloc>(),
           child: const RegisterPage(),
         ),
@@ -76,8 +75,6 @@ class AppRouter {
         path: RouterConstants.profile,
         builder: (context, state) => const ProfilePage(),
       ),
-
-      // ✅ Ruta actualizada con BlocProvider
       GoRoute(
         path: RouterConstants.establecimiento,
         builder: (context, state) => BlocProvider(
@@ -85,23 +82,35 @@ class AppRouter {
           child: const EstablecimientoHomePage(),
         ),
       ),
-
       GoRoute(
         path: RouterConstants.estadisticas,
         builder: (context, state) => const EstadisticasPage(),
       ),
-
-
       GoRoute(
         path: RouterConstants.comentarios,
         builder: (context, state) => const CommentPage(),
       ),
 
+      // Ruta para la página de bienvenida al chat
       GoRoute(
-        path: RouterConstants.chat,
-        builder: (context, state) => const ChatBotPage(),
+        path: RouterConstants.chatWelcome,
+        builder: (context, state) => ChatWelcomePage(
+          sugerencias: [
+            '¿Qué lugares turísticos hay cerca?',
+            '¿Recomiéndame un restaurante local?',
+            '¿Qué eventos hay hoy?',
+          ],
+        ),
       ),
 
+      // Ruta para el chat, recibe pregunta opcional por query param
+      GoRoute(
+        path: '/chat',
+        builder: (context, state) {
+          final pregunta = state.uri.queryParameters['pregunta'];
+          return ChatBotPage(preguntaInicial: pregunta);
+        },
+      ),
 
     ],
   );
@@ -120,9 +129,8 @@ class RouterConstants {
   static const String profile = '/profile';
   static const String historial = '/historial';
   static const String chat = '/chat';
+  static const String chatWelcome = '/chat-welcome';
   static const String establecimiento = '/establecimiento';
   static const String estadisticas = '/estadisticas';
   static const String comentarios = '/comentarios';
-
-
 }

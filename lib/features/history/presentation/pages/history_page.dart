@@ -59,7 +59,7 @@ class _HistoryPageState extends State<HistoryPage> {
   final List<String> _routes = [
     '/home',
     '/explore',
-    '/chat',
+    '/chat-welcome',
     '/profile',
   ];
 

@@ -5,7 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 
 class ChatBotPage extends StatefulWidget {
-  const ChatBotPage({super.key});
+  final String? preguntaInicial;
+  const ChatBotPage({super.key, this.preguntaInicial});
 
   @override
   State<ChatBotPage> createState() => _ChatBotPageState();
@@ -32,6 +33,28 @@ class _ChatBotPageState extends State<ChatBotPage> with TickerProviderStateMixin
       model: 'gemini-1.5-flash',
       apiKey: dotenv.env['API_KEY_CHAT'] ?? '',
     );
+
+    if (widget.preguntaInicial != null && widget.preguntaInicial!.trim().isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _enviarPreguntaInicial(widget.preguntaInicial!.trim());
+      });
+    }
+  }
+
+  Future<void> _enviarPreguntaInicial(String pregunta) async {
+    setState(() {
+      _messages.add(_Message(text: pregunta, isBot: false));
+      _isLoading = true;
+    });
+    _scrollToBottom();
+
+    final respuesta = await _fetchBotResponse(pregunta);
+
+    setState(() {
+      _messages.add(_Message(text: respuesta, isBot: true));
+      _isLoading = false;
+    });
+    _scrollToBottom();
   }
 
   Future<void> _sendMessage() async {
@@ -66,12 +89,7 @@ Pregunta del usuario: $userMessage
 ''';
 
       final response = await _model.generateContent([Content.text(prompt)]);
-
-      if (response.text != null) {
-        return response.text!.trim();
-      } else {
-        return 'Lo siento, no encontré información.';
-      }
+      return response.text?.trim() ?? 'Lo siento, no encontré información.';
     } catch (e) {
       return 'Error al contactar la IA: $e';
     }
@@ -154,7 +172,6 @@ Pregunta del usuario: $userMessage
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Degradado suave de fondo con tus colores pedidos
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -166,16 +183,13 @@ Pregunta del usuario: $userMessage
         child: SafeArea(
           child: Column(
             children: [
-              // AppBar personalizado
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                 child: Row(
                   children: [
                     IconButton(
                       icon: const Icon(Icons.arrow_back, color: Colors.teal),
-                      onPressed: () {
-                        context.go('/home');
-                      },
+                      onPressed: () => context.go('/home'),
                     ),
                     const Expanded(
                       child: Center(
@@ -185,13 +199,7 @@ Pregunta del usuario: $userMessage
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.teal,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black12,
-                                offset: Offset(1, 1),
-                                blurRadius: 2,
-                              )
-                            ],
+                            shadows: [Shadow(color: Colors.black12, offset: Offset(1, 1), blurRadius: 2)],
                           ),
                         ),
                       ),
@@ -204,31 +212,19 @@ Pregunta del usuario: $userMessage
                   ],
                 ),
               ),
-
               Expanded(
                 child: ListView.builder(
                   controller: _scrollController,
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   itemCount: _messages.length,
-                  itemBuilder: (context, index) {
-                    final msg = _messages[index];
-                    return _buildMessageBubble(msg);
-                  },
+                  itemBuilder: (context, index) => _buildMessageBubble(_messages[index]),
                 ),
               ),
-
-              // Campo de entrada + botón enviar
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, -1),
-                    ),
-                  ],
+                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, -1))],
                 ),
                 child: Row(
                   children: [
@@ -238,14 +234,10 @@ Pregunta del usuario: $userMessage
                         textCapitalization: TextCapitalization.sentences,
                         decoration: InputDecoration(
                           hintText: 'Escribe tu mensaje...',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(24),
-                            borderSide: BorderSide.none,
-                          ),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),
                           filled: true,
                           fillColor: const Color(0xFFF0F9F3),
-                          contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                         ),
                         onSubmitted: (_) => _sendMessage(),
                         enabled: !_isLoading,
@@ -259,13 +251,7 @@ Pregunta del usuario: $userMessage
                         decoration: BoxDecoration(
                           color: _isLoading ? Colors.grey : const Color(0xFF00CDBE),
                           shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 6,
-                              offset: const Offset(0, 2),
-                            )
-                          ],
+                          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 6, offset: const Offset(0, 2))],
                         ),
                         child: _isLoading
                             ? const SizedBox(
@@ -281,7 +267,7 @@ Pregunta del usuario: $userMessage
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -293,5 +279,6 @@ Pregunta del usuario: $userMessage
 class _Message {
   final String text;
   final bool isBot;
+
   const _Message({required this.text, required this.isBot});
 }

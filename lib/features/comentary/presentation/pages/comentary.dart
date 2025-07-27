@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart'; // Importa SharedPreferences
 
 import '../../data/models/comments_models.dart';
 import '../widgets/comment_card.dart';
-import '../widgets/rating_box.dart';
 import '../widgets/star_with_sparkles.dart';
 
 class CommentPage extends StatefulWidget {
@@ -19,18 +19,39 @@ class _CommentPageState extends State<CommentPage> {
   final TextEditingController _commentController = TextEditingController();
 
   List<Comment> _comments = [];
-  double _selectedRating = 0;
+  int _selectedRating = 0;
+  String _token = ''; // Guarda el token aquí
 
   @override
   void initState() {
     super.initState();
-    fetchComments();
+    _loadTokenAndFetchComments();
+  }
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadTokenAndFetchComments() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token') ?? '';
+    setState(() {
+      _token = token;
+    });
+
+    // Ahora que tenemos el token, hacemos fetch
+    await fetchComments();
   }
 
   Future<void> fetchComments() async {
     try {
       final response = await http.get(
-        Uri.parse('https://turistdata-back.onrender.com/api/comentarios/comentario'),
+        Uri.parse('https://turistdata-back.onrender.com/api/comentario/establecimiento?establecimiento_id=1'),
+        headers: {
+          'Authorization': 'Bearer $_token', // Agrega el token aquí
+        },
       );
 
       if (response.statusCode == 200) {
@@ -40,10 +61,14 @@ class _CommentPageState extends State<CommentPage> {
           _comments = comments;
         });
       } else {
-        debugPrint('Error al obtener comentarios: ${response.statusCode}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al obtener comentarios: ${response.statusCode}')),
+        );
       }
     } catch (e) {
-      debugPrint('Error fetchComments: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error de conexión al obtener comentarios: $e')),
+      );
     }
   }
 
@@ -58,11 +83,15 @@ class _CommentPageState extends State<CommentPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('https://turistdata-back.onrender.com/api/comentarios/comentario/rg'),
-        headers: {'Content-Type': 'application/json'},
+        Uri.parse('https://turistdata-back.onrender.com/api/comentario/rg'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $_token', // También aquí agregamos el token
+        },
         body: json.encode({
           'comentario': text,
-          'rating': _selectedRating,
+          'estrellas_calificacion': _selectedRating,
+          'id_establecimiento': 1,
         }),
       );
 
@@ -79,7 +108,7 @@ class _CommentPageState extends State<CommentPage> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error de conexión al enviar comentario')),
+        SnackBar(content: Text('Error de conexión al enviar comentario: $e')),
       );
     }
   }
@@ -96,7 +125,7 @@ class _CommentPageState extends State<CommentPage> {
           size: 32,
           onTap: () {
             setState(() {
-              _selectedRating = starIndex.toDouble();
+              _selectedRating = starIndex;
             });
           },
         );
@@ -106,9 +135,12 @@ class _CommentPageState extends State<CommentPage> {
 
   Widget _buildEmoji() {
     String emoji = '';
-    switch (_selectedRating.toInt()) {
+    switch (_selectedRating) {
       case 5:
         emoji = '😎';
+        break;
+      case 4:
+        emoji = '🙂';
         break;
       case 3:
         emoji = '😐';
@@ -119,15 +151,12 @@ class _CommentPageState extends State<CommentPage> {
       case 1:
         emoji = '😱';
         break;
-      default:
-        if (_selectedRating > 0) {
-          emoji = '🙂';
-        }
     }
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 400),
-      transitionBuilder: (child, animation) => ScaleTransition(scale: animation, child: child),
+      transitionBuilder: (child, animation) =>
+          ScaleTransition(scale: animation, child: child),
       child: emoji.isNotEmpty
           ? Text(
         emoji,
@@ -176,44 +205,22 @@ class _CommentPageState extends State<CommentPage> {
               ),
             ),
           ),
-
           const SizedBox(height: 16),
           const Text(
-            'Calificaciones generales',
+            'Comentarios más recientes',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: const [
-              RatingBox(label: 'Limpieza', rating: 4.8),
-              SizedBox(width: 12),
-              RatingBox(label: 'Atención', rating: 4.8),
-              SizedBox(width: 12),
-              RatingBox(label: 'Comodidad', rating: 4.8),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: const [
-              Icon(Icons.star, color: Colors.orangeAccent),
-              SizedBox(width: 6),
-              Text(
-                '4.83 promedio de 52 evaluaciones',
-                style: TextStyle(fontSize: 14),
-              ),
-            ],
           ),
           const SizedBox(height: 16),
           if (_comments.isEmpty)
             const Center(child: Text('No hay comentarios que mostrar.')),
-
           ..._comments.map(
                 (c) => CommentCard(
-              nombre: c.nombre,
-              ciudad: c.ciudad,
+              usuario: c.nombre,
               comentario: c.comentario,
-              fecha: c.fecha,
-              rating: c.rating,
+              // si tienes limpieza, atencion, comodidad, pásalos aquí
+              // limpieza: c.limpieza,
+              // atencion: c.atencion,
+              // comodidad: c.comodidad,
             ),
           ),
           const SizedBox(height: 20),
@@ -252,9 +259,7 @@ class _CommentPageState extends State<CommentPage> {
               ),
             ],
           ),
-
           const SizedBox(height: 24),
-
         ],
       ),
     );

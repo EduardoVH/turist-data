@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/usecases/login_usecase.dart';
-
 import 'auth_event.dart';
 import 'auth_state.dart';
 
@@ -17,20 +17,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ) async {
     emit(AuthLoading());
 
-    /// ---------------------------
-    /// MODO REAL (con backend)
     final result = await loginUseCase(event.correo, event.password);
 
-    result.fold(
-      // En caso de error (failure)
-          (failure) {
+    await result.fold(
+          (failure) async {
         emit(AuthFailure(failure.message));
       },
+          (token) async {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token); // Guardar token
 
-      // En caso de éxito (token)
-          (token) {
         print('Correo: ${event.correo}');
-        // Emitimos token y el correo que viene en el evento para mostrarlo luego
         emit(AuthSuccess(token, event.correo));
       },
     );

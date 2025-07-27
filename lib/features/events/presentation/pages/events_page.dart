@@ -80,7 +80,7 @@ class EventsPage extends StatelessWidget {
           unselectedItemColor: Colors.grey,
           type: BottomNavigationBarType.fixed,
           onTap: (index) {
-            final routes = ['/home', '/explore', '/eventos', '/chat', '/profile'];
+            final routes = ['/home', '/explore', '/eventos', '/chat-welcome', '/profile'];
             context.go(routes[index]);
           },
           items: const [

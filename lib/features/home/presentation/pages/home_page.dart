@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   final List<String> _routes = [
     RouterConstants.home,
     RouterConstants.explore,
-    RouterConstants.chat,
+    RouterConstants.chatWelcome,
     RouterConstants.profile,
   ];
 

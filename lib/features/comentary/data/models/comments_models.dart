@@ -1,27 +1,26 @@
 class Comment {
   final String nombre;
-  final String ciudad;
   final String comentario;
   final String fecha;
-  final double rating;
+  final String ciudad;
+  final int rating;
 
   Comment({
     required this.nombre,
-    required this.ciudad,
     required this.comentario,
     required this.fecha,
+    required this.ciudad,
     required this.rating,
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
-      nombre: json['nombre'] ?? 'Anónimo',
-      ciudad: json['ciudad'] ?? 'Desconocida',
+      nombre: json['nombre'] ?? '',
       comentario: json['comentario'] ?? '',
       fecha: json['fecha'] ?? '',
-      rating: (json['rating'] != null)
-          ? double.tryParse(json['rating'].toString()) ?? 0
-          : 0,
+      ciudad: json['ciudad'] ?? '',
+      rating: json['estrellas_calificacion'] ?? 0,
     );
   }
-}
+
+  }

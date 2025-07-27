@@ -14,37 +14,14 @@ class ExplorePage extends StatefulWidget {
 
 class _ExplorePageState extends State<ExplorePage> {
   final List<String> filters = const [
-    'Aguascalientes',
-    'Baja California',
-    'Baja California Sur',
-    'Campeche',
-    'Chiapas',
-    'Chihuahua',
-    'CDMX',
-    'Coahuila',
-    'Colima',
-    'Durango',
-    'Guanajuato',
-    'Guerrero',
-    'Hidalgo',
-    'Jalisco',
-    'Edo. México',
-    'Michoacán',
-    'Morelos',
-    'Nayarit',
-    'Nuevo León',
-    'Oaxaca',
-    'Puebla',
-    'Querétaro',
-    'Quintana Roo',
-    'San Luis Potosí',
-    'Sinaloa',
-    'Sonora',
-    'Tabasco',
-    'Tamaulipas',
-    'Tlaxcala',
-    'Veracruz',
-    'Yucatán',
+    'Aguascalientes',  'Baja California',   'Baja California Sur',
+    'Campeche', 'Chiapas', 'Chihuahua', 'CDMX',
+    'Coahuila',  'Colima',   'Durango',  'Guanajuato',
+    'Guerrero',  'Hidalgo', 'Jalisco', 'Edo. México',
+    'Michoacán', 'Morelos', 'Nayarit', 'Nuevo León',
+    'Oaxaca', 'Puebla', 'Querétaro',    'Quintana Roo',
+    'San Luis Potosí',   'Sinaloa','Sonora', 'Tabasco',
+    'Tamaulipas', 'Tlaxcala', 'Veracruz', 'Yucatán',
     'Zacatecas'
   ];
 
@@ -95,7 +72,7 @@ class _ExplorePageState extends State<ExplorePage> {
   }
 
   void _onItemTapped(int index) {
-    final routes = ['/home', '/explore', '/eventos', '/chat', '/profile'];
+    final routes = ['/home', '/explore', '/eventos', '/chat-welcome', '/profile'];
     setState(() => _selectedIndex = index);
     context.go(routes[index]);
   }
@@ -230,7 +207,7 @@ class DestinationCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        // Aquí puedes navegar a una página de detalle si quieres
+
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 20),
