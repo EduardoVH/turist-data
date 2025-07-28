@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:turist_data/core/di/injection.dart';
-import 'package:turist_data/features/chatbot/presentation/pages/chatbot_page.dart';
 import 'package:turist_data/features/register/presentation/blocs/register_bloc.dart';
 import 'package:turist_data/features/register/presentation/pages/register_page.dart';
 import '../../features/login/presentation/pages/login_page.dart';
@@ -77,11 +76,6 @@ class AppRouter {
         builder: (context, state) => const ProfilePage(),
       ),
       GoRoute(
-<<<<<<< HEAD
-        path: RouterConstants.chat,
-        builder: (context, state) => const ChatBotPage(),
-      ),
-=======
         path: RouterConstants.establecimiento,
         builder: (context, state) => BlocProvider(
           create: (_) => sl<EstablecimientoBloc>()..add(LoadEstablecimientos()),
@@ -118,7 +112,6 @@ class AppRouter {
         },
       ),
 
->>>>>>> 2a8a2670ed3cd7a96ed935c3658cab3e8347b3a2
     ],
   );
 }

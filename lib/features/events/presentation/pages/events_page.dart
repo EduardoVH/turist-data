@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:dio/dio.dart';
 import 'package:turist_data/core/di/injection.dart';
 import 'package:turist_data/features/events/presentation/bloc/eventos_bloc.dart';
 
@@ -50,7 +49,7 @@ class EventsPage extends StatelessWidget {
             } else if (state is EventosLoaded) {
               final eventos = state.eventos;
               if (eventos.isEmpty) {
-                return const Center(child: Text('No hay eventos registrados.'));
+                return const Center(child: Text('No hay eventos cercanos a tu ubicación.'));
               }
               return ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -117,8 +116,6 @@ class EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final estadoEvento = data['estado'] ?? 'Desconocido';
     final estadoColor = getEstadoColor(estadoEvento);
-
-    // Aquí usamos id_lugar en vez de id_destino
     final idLugar = data['id_lugar'] ?? 'N/A';
 
     return AnimatedContainer(
